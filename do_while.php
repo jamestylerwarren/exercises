@@ -1,7 +1,7 @@
 <?php
 
-$num = 100;
+$num = 2;
 do {
 	echo $num . PHP_EOL;
-	$num -= 5;
-} while ($num >= -10);
+	$num *= $num;
+} while ($num <= 1000000);
