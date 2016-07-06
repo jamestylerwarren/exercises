@@ -26,7 +26,7 @@ function input(&$student) {
 
         fwrite(STDOUT, 'What is your grade? ') . PHP_EOL;
         $grade = trim(fgets(STDIN));   //saving response as grade
-        $student['subjects'][$subject] = $grade; //Adding subject and grades to $students['subjects'] array
+        $student['subjects'][$subject] = $grade; //Adding a new array containing subject and grades into $students['subjects'] array
 
         fwrite(STDOUT, 'Do you want to add another grade? ') . PHP_EOL;
         $anotherGrade = trim(fgets(STDIN));
@@ -48,14 +48,14 @@ function input(&$student) {
 function calculateAverage($student) {
     $total = 0;
     foreach ($student['subjects'] as $subject => $grade) {
-        $total += $grade;
+        $total += $grade; //looking into $student['subjects'] and looking at grades; adding them up and saving as $total
     }
     $average = $total / count($student['subjects']);
     return $average;
 
 }
 
-//----------- Calculating Average --------------------//
+//----------- Evaluating Average --------------------//
 
 $average = round(calculateAverage($student), 2);
 // Output
