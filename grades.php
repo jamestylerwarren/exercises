@@ -5,7 +5,13 @@
 // $grade; 
 // $average;
 // var_dump($name);
+// Object definition
 
+$student = array(
+    'awesomeGrade' => 80, 
+    'name' => null, 
+    'subjects' => array()
+);
 
 
 
@@ -35,22 +41,20 @@ echo input($student);
 $average = round(calculateAverage(), 2);
 // Output
 if ($average > $student['awesomeGrade'] {
-    echo "$student['name'] you are awesome!!!! Your average was $average\n";
+    echo "{$student['name']} you are awesome!!!! Your average was $average\n";
 } else {
-    echo "$student['name'] you need more practice. Your average was $average\n";
+    echo "{$student['name']} you need more practice. Your average was $average\n";
 }
 
 
-// Object definition
-$student = ['awesomeGrade' => 80, 'name' => null, 'subjects' => []];
 
 
 function calculateAverage() {
     $average = 0;
-    this.subjects.forEach(function (subject) {
-    $average += subject.grade;
+    foreach ($student as $subject) {
+    $average += $subject['grade'];
     });
-    return $average / this.subjects.length;
+    return $average / count($student);
 }
     
 function addSubject($name, $grade) {
