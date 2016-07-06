@@ -6,20 +6,27 @@
 $suits = ['C', 'H', 'S', 'D'];
 
 // create an array for cards
-$cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 
 // build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
 function buildDeck($suits, $cards) {
-  // todo
+  $randCard = $cards[array_rand($cards)];
+  $randSuit = $suits[array_rand($suits)];
+  echo "$randCard $randSuit\n";
+  cardIsAce($randCard);
 }
 
 // determine if a card is an ace
 // return true for ace, false for anything else
-function cardIsAce($card) {
-  // todo
-}
+function cardIsAce($randCard) {
+  if ($randCard == 'Ace') {
+  	echo "True\n";
+  } else {
+  	echo "False\n";
+  }
+} 
 
 // determine the value of an individual card (string)
 // aces are worth 11
@@ -70,9 +77,9 @@ $player = [];
 // todo
 
 // allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay
-while (/* todo */) {
-  // todo
-}
+// while ( todo ) {
+//   // todo
+// }
 
 // show the dealer's hand (all cards)
 // todo
