@@ -7,11 +7,11 @@
 // var_dump($name);
 // Object definition
 
-$student = array(
+$student = [
     'awesomeGrade' => 80, 
     'name' => null, 
-    'subjects' => array()
-);
+    'subjects' => []
+];
 
 
 
