@@ -23,8 +23,8 @@ $books = array(
 	)
 );
 
-foreach ($books as $title => $details) {
-	if ($details['published'] > 1950) {
+foreach ($books as $title => $book) {
+	if ($book['published'] > 1950) {
 		echo "$title\n";
 	};
 }

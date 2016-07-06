@@ -18,52 +18,45 @@ $student = array(
 // Input
 function input(&$student) {
     fwrite(STDOUT, 'What is your name? ') . PHP_EOL;
-    $name = trim(fgets(STDIN));
-    $student['name'] = $name;
+    $name = trim(fgets(STDIN));//saving response as name
+    $student['name'] = $name; //adding response to array
     do {
         fwrite(STDOUT, 'What is the name of the subject? ') . PHP_EOL;
-        $subject = trim(fgets(STDIN));
-        $student['subjects'] = $subject;
+        $subject = trim(fgets(STDIN)); //saving response as subject
 
         fwrite(STDOUT, 'What is your grade? ') . PHP_EOL;
-        $grade = trim(fgets(STDIN));
+        $grade = trim(fgets(STDIN));   //saving response as grade
+        $student['subjects'][$subject] = $grade; //Adding subject and grades to $students['subjects'] array
 
         fwrite(STDOUT, 'Do you want to add another grade? ') . PHP_EOL;
         $anotherGrade = trim(fgets(STDIN));
     } while (strtolower($anotherGrade) == 'yes' || strtolower($anotherGrade) == 'y');
 } echo input($student);
 
-// echo input($student);
 
 //---------- Adding subjects to student array ---------//    
-function addSubject($name, $grade) {
-    $student['subjects'] = [
-        $name => 'name',
-        $grade => 'grade'
-    ];
-    $subject = $student['subjects'];
-    var_dump($name);
-    var_dump($grade);
-}
+// function addSubject($name, $grade) {
+//     $subject = [
+//         $name => 'name',
+//         $grade => 'grade'
+//     ];
+//     $subject = $student['subjects'];
+// }
 
 
 //-------- Calculating average ----------------//
 function calculateAverage($student) {
-    $average = 0;
-    foreach ($student as $subject) {
-        $average += $subject['grade'];
-    };
-    return $average / count($student);
-    var_dump($average);
+    $total = 0;
+    foreach ($student['subjects'] as $subject => $grade) {
+        $total += $grade;
+    }
+    $average = $total / count($student['subjects']);
+    return $average;
 
 }
-    
-
-
-
 
 //----------- Calculating Average --------------------//
-var_dump(gettype($average) );
+
 $average = round(calculateAverage($student), 2);
 // Output
 if ($average > $student['awesomeGrade']) {
@@ -72,7 +65,7 @@ if ($average > $student['awesomeGrade']) {
     echo "{$student['name']} you need more practice. Your average was $average.\n";
 }
 
-print_r($student);
+// print_r($student);
 
 // function isAwesome() {
 //     return this.calculateAverage() > this.awesomeGrade;
