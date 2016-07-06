@@ -22,9 +22,9 @@ function buildDeck($suits, $cards) {
 // return true for ace, false for anything else
 function cardIsAce($randCard) {
   if ($randCard == 'Ace') {
-  	echo "True\n";
+	return "True\n";
   } else {
-  	echo "False\n";
+	return "False\n";
   }
 } 
 
@@ -32,8 +32,14 @@ function cardIsAce($randCard) {
 // aces are worth 11
 // face cards are worth 10
 // numeric cards are worth their value
-function getCardValue($card) {
-  // todo
+function getCardValue($cards) {
+	foreach ($cards as $value) {
+		if ($value == 'A') {
+			return 
+		} elseif ($value == 'Jack' || $value == 'Queen' || $value == 'King') {
+			
+		}
+ 	}
 }
 
 // get total value for a hand of cards
