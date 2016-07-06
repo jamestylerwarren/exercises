@@ -16,7 +16,7 @@ $student = array(
 
 
 // Input
-function input($student) {
+function input(&$student) {
     fwrite(STDOUT, 'What is your name? ') . PHP_EOL;
     $name = trim(fgets(STDIN));
     $student['name'] = $name;
@@ -31,44 +31,50 @@ function input($student) {
         fwrite(STDOUT, 'Do you want to add another grade? ') . PHP_EOL;
         $anotherGrade = trim(fgets(STDIN));
     } while (strtolower($anotherGrade) == 'yes' || strtolower($anotherGrade) == 'y');
+} echo input($student);
+
+// echo input($student);
+
+//---------- Adding subjects to student array ---------//    
+function addSubject($name, $grade) {
+    $student['subjects'] = [
+        $name => 'name',
+        $grade => 'grade'
+    ];
+    $subject = $student['subjects'];
+    var_dump($name);
+    var_dump($grade);
 }
 
-echo input($student);
 
-
-
-// Process
-$average = round(calculateAverage(), 2);
-// Output
-if ($average > $student['awesomeGrade'] {
-    echo "{$student['name']} you are awesome!!!! Your average was $average\n";
-} else {
-    echo "{$student['name']} you need more practice. Your average was $average\n";
-}
-
-
-
-
-function calculateAverage() {
+//-------- Calculating average ----------------//
+function calculateAverage($student) {
     $average = 0;
     foreach ($student as $subject) {
-    $average += $subject['grade'];
-    });
-    return $average / count($student);
-}
-    
-function addSubject($name, $grade) {
-    $subject = {
-        name: name,
-        grade: grade
+        $average += $subject['grade'];
     };
-    this.subjects.push(subject);
-},
+    return $average / count($student);
+    var_dump($average);
+
+}
     
-function isAwesome() {
-    return this.calculateAverage() > this.awesomeGrade;
+
+
+
+
+//----------- Calculating Average --------------------//
+var_dump(gettype($average) );
+$average = round(calculateAverage($student), 2);
+// Output
+if ($average > $student['awesomeGrade']) {
+    echo "{$student['name']} you are awesome!!!! Your average was $average.\n";
+} else {
+    echo "{$student['name']} you need more practice. Your average was $average.\n";
 }
 
+print_r($student);
 
-
+// function isAwesome() {
+//     return this.calculateAverage() > this.awesomeGrade;
+// }
 
