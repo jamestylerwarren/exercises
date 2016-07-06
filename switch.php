@@ -43,7 +43,8 @@ if ($dayOfWeek == 1) {
 	echo "Friday\n";
 } elseif ($dayOfWeek == 6) {
 	echo "Saturday\n";
-} else echo "Sunday\n";
-
+} else { 
+	echo "Sunday\n";
+}
 
 
