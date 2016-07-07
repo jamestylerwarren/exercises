@@ -25,7 +25,7 @@ function inspect($a) {
 			if ($value) {
 				return "This array is empty"; 
 			} else {
-				return 'This is an ' . gettype($a) . ': ' . implode(', ', $a);
+				return 'This is an array: ' . implode(', ', $a);
 			}
 			break;
 		case 'NULL':
