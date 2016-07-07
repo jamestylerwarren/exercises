@@ -13,20 +13,21 @@ $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 
 // make sure to shuffle the deck before returning it
 function buildDeck($suits, $cards) {
 	$randCard = $cards[array_rand($cards)];
-  	$randSuit = $suits[array_rand($suits)];
-  	echo "$randCard $randSuit\n";
-  	cardIsAce($randCard);
-  	shuffle($cards);
+	$randSuit = $suits[array_rand($suits)];
+	echo "$randCard $randSuit\n";
+	cardIsAce($randCard);
+	// shuffle($cards);
+	print_r($cards);
 }
 
 // determine if a card is an ace
 // return true for ace, false for anything else
 function cardIsAce($randCard) {
-  	if ($randCard == 'Ace') {
+	if ($randCard == 'Ace') {
 		return "True\n";
-  	} else {
+	} else {
 		return "False\n";
-  	}
+	}
 } 
 
 // determine the value of an individual card (string)
@@ -42,14 +43,14 @@ function getCardValue($cards, $randCard) {
 		} else {
 			return intval($value);
 		}
- 	}
+	}
 }  
 
 // get total value for a hand of cards
 // don't forget to factor in aces
 // aces can be 1 or 11 (make them 1 if total value is over 21)
 function getHandTotal($hand) {
-  // todo
+
 }
 
 // draw a card from the deck into a hand
