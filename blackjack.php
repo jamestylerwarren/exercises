@@ -14,7 +14,7 @@ $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 
 function buildDeck($suits, $cards) {
 	$randCard = $cards[array_rand($cards)];
   	$randSuit = $suits[array_rand($suits)];
-  	echo "$randCard$randSuit\n";
+  	echo "$randCard $randSuit\n";
   	cardIsAce($randCard);
   	shuffle($cards);
 }
@@ -33,7 +33,7 @@ function cardIsAce($randCard) {
 // aces are worth 11
 // face cards are worth 10
 // numeric cards are worth their value
-function getCardValue($cards) {
+function getCardValue($cards, $randCard) {
 	foreach ($cards as $value) {
 		if ($value == 'A') {
 			return 11;
@@ -41,10 +41,9 @@ function getCardValue($cards) {
 			return 10;
 		} else {
 			return intval($value);
-			var_dump(intval($value));
 		}
  	}
-} 
+}  
 
 // get total value for a hand of cards
 // don't forget to factor in aces
