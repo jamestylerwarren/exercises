@@ -31,7 +31,7 @@ function multiply($a, $b)
 function divide($a, $b)
 {	
 	if ($b == 0) {
-		return "\$a = $a \n\$b = $b\n";
+		return "\$a = $a \$b = $b\n";
 	} elseif (is_numeric($a) && is_numeric($b)) {
     	return $a / $b;
 	}
