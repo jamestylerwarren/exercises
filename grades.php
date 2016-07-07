@@ -1,19 +1,10 @@
 <?php
 
-// Variables
-// $name; 
-// $grade; 
-// $average;
-// var_dump($name);
-// Object definition
-
 $student = [
     'awesomeGrade' => 80, 
     'name' => null, 
     'subjects' => []
 ];
-
-
 
 // Input
 function input(&$student) {
@@ -33,7 +24,6 @@ function input(&$student) {
     } while (strtolower($anotherGrade) == 'yes' || strtolower($anotherGrade) == 'y');
 } echo input($student);
 
-
 //---------- Adding subjects to student array ---------//    
 // function addSubject($name, $grade) {
 //     $subject = [
@@ -43,7 +33,6 @@ function input(&$student) {
 //     $subject = $student['subjects'];
 // }
 
-
 //-------- Calculating average ----------------//
 function calculateAverage($student) {
     $total = 0;
@@ -52,11 +41,9 @@ function calculateAverage($student) {
     }
     $average = $total / count($student['subjects']);
     return $average;
-
 }
 
 //----------- Evaluating Average --------------------//
-
 $average = round(calculateAverage($student), 2);
 // Output
 if ($average > $student['awesomeGrade']) {
