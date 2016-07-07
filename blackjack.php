@@ -7,12 +7,15 @@ $suits = ['C', 'H', 'S', 'D'];
 
 // create an array for cards
 $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+//MAKE NEW ARRAY SO EACH CARD HAS IT'S OWN ARRAY OF SUITS EX. 10 ['C', 'H', 'S', 'D']
+
 
 // build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
 function buildDeck($suits, $cards) {
 	$randCard = $cards[array_rand($cards)];
+	unset($cards[$randCard - 1]);
 	$randSuit = $suits[array_rand($suits)];
 	echo "$randCard $randSuit\n";
 	cardIsAce($randCard);
