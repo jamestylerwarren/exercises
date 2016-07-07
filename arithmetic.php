@@ -4,30 +4,54 @@ $a = 20;
 $b = 5;
 
 function add($a, $b)
-{
-    return $a + $b;
+{	
+	if (is_numeric($a) && is_numeric($b)) {
+    	return $a + $b;
+	} else {
+		return "ERROR";
+	}
 }
 
 function subtract($a, $b)
 {
-    return $a - $b;
+    if (is_numeric($a) && is_numeric($b)) {
+    	return $a - $b;
+	} else {
+		return "ERROR";
+	}
 }
 
 function multiply($a, $b)
 {
-    return $a * $b;
+    if (is_numeric($a) && is_numeric($b)) {
+    	return $a * $b;
+	} else {
+		return "ERROR";
+	}
 }
 
 function divide($a, $b)
 {
-    return $a / $b;
+    if (is_numeric($a) && is_numeric($b)) {
+    	return $a / $b;
+	} else {
+		return "ERROR";
+	}
 }
 
-function modulus($a, $b) {
-	return $a % $b;
+function modulus($a, $b) 
+{
+	if (is_numeric($a) && is_numeric($b)) {
+    	return $a % $b;
+	} else {
+		return "ERROR";
+	}
 }
 
-echo add(10, 2) . PHP_EOL;
+
+
+
+echo add(p, 2) . PHP_EOL;
 echo subtract(10, 2) . PHP_EOL;
 echo multiply(10, 2) . PHP_EOL;
 echo divide(10, 2) . PHP_EOL;
