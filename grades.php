@@ -10,7 +10,7 @@ $student = [
 function input(&$student) {
     fwrite(STDOUT, 'What is your name? ') . PHP_EOL;
     $name = trim(fgets(STDIN));//saving response as name
-    $student['name'] = $name; //adding response to array
+    $student['name'] = $name; //adding name to array
     do {
         fwrite(STDOUT, 'What is the name of the subject? ') . PHP_EOL;
         $subject = trim(fgets(STDIN)); //saving response as subject
