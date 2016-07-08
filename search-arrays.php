@@ -4,24 +4,32 @@ $names = ['Tina', 'Dana', 'Mike', 'Amy', 'Adam'];
 
 $compare = ['Tina', 'Dean', 'Mel', 'Amy', 'Michael'];
 
-$query = 'Tina';
+// $query = 'Tina';
 
-function arraySearch($query, $names) {
-	if (array_search($query, $names) !== False) {
-		echo "true\n";
-	} else {
-		echo "false\n";
+// function arraySearch($query, $names) {
+// 	if (array_search($query, $names) !== False) {
+// 		echo "true\n";
+// 	} else {
+// 		echo "false\n";
+// 	}
+// }
+// arraySearch($query, $names);
+
+
+
+function compareArrays($names, $compare) {
+	$count = 0;
+	foreach ($names as $name) {
+		if (array_search($name, $compare) !== false) {
+			$count++;
+		}
 	}
-} arraySearch($query, $names);
+	return ($count) . PHP_EOL;
+} 
+echo compareArrays($names, $compare);
+	
 
 
-
-
- // if (array_search($query, $names)) {
- // 	var_dump("True");
- // } else {
- // 	var_dump("False");
- // }
 	
 
 
