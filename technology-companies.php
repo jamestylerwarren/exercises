@@ -46,8 +46,16 @@ $companies = [
 ];
 
 
-// foreach ($companies as $company => $employee) {
+
 foreach ($companies as $company => $employee) {
     asort($companies[$company]);
 }
 print_r($companies);
+
+
+arsort($companies);
+
+print_r($companies);
+
+
+
