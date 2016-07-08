@@ -55,7 +55,7 @@ do {
 			var_dump(searchByName($friends, $name));
 			break;
 	}
-} while ($option != '3');
+} while ($option != 3);
 
 
 
