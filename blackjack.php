@@ -2,26 +2,21 @@
 
 // complete all "todo"s to build a blackjack game
 
-// create an array for suits
-$suits = ['C', 'H', 'S', 'D'];
-
 // create an array for cards
-$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+$cards = ['Ace' => ['C', 'H', 'S', 'D'], '2' => ['C', 'H', 'S', 'D'], '3' => ['C', 'H', 'S', 'D'], '4' => ['C', 'H', 'S', 'D'], '5' => ['C', 'H', 'S', 'D'], '6' => ['C', 'H', 'S', 'D'], '7' => ['C', 'H', 'S', 'D'], '8' => ['C', 'H', 'S', 'D'], '9' => ['C', 'H', 'S', 'D'], '10' => ['C', 'H', 'S', 'D'], 'Jack' => ['C', 'H', 'S', 'D'], 'Queen' => ['C', 'H', 'S', 'D'], 'King' => ['C', 'H', 'S', 'D']];
 //MAKE NEW ARRAY SO EACH CARD HAS IT'S OWN ARRAY OF SUITS EX. 10 ['C', 'H', 'S', 'D']
-
+print_r($cards);
 
 // build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
-function buildDeck($suits, $cards) {
-	$randCard = $cards[array_rand($cards)];
-	unset($cards[$randCard - 1]);
-	$randSuit = $suits[array_rand($suits)];
-	echo "$randCard $randSuit\n";
-	cardIsAce($randCard);
+function buildDeck($cards) {
+	$randomCard = array_rand($cards);
+	$randomSuit = $cards[$randomCard][array_rand($cards[$randomCard])];
+	return $randomCard . ' ' . $randomSuit . PHP_EOL;
 	// shuffle($cards);
-	print_r($cards);
-}
+
+} echo buildDeck($cards);
 
 // determine if a card is an ace
 // return true for ace, false for anything else
@@ -74,11 +69,11 @@ function echoHand($hand, $name, $hidden = false) {
 }
 
 // build the deck of cards
-$deck = buildDeck($suits, $cards);
+// $deck = buildDeck($suits, $cards);
 
 // initialize a dealer and player hand
-$dealer = [];
-$player = [];
+// $dealer = [];
+// $player = [];
 
 // dealer and player each draw two cards
 // todo
