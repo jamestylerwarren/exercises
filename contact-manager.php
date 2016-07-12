@@ -1,5 +1,5 @@
 <?php
-
+//------OPTION NUMBER 1 - VIEWING CONTACTS--------//
 function viewContacts() {
 	$filename = 'contacts.txt';
 	$handle = trim(file_get_contents($filename));
@@ -7,26 +7,36 @@ function viewContacts() {
 }
 
 
+//------OPTION NUMBER 2 - ADDING CONTACTS--------//
 function addContact() {
 	$filename = 'contacts.txt';
 	$handle = fopen($filename, 'a');
-	fwrite(STDOUT, "Please enter contact first and last name: ") . PHP_EOL;
+	fwrite(STDOUT, "Enter name: ") . PHP_EOL;
 	$newName = trim(fgets(STDIN));
-	fwrite(STDOUT, "Please enter contact telephone number: ") . PHP_EOL;
+	fwrite(STDOUT, "Enter number: ") . PHP_EOL;
 	$newNumber = trim(fgets(STDIN));
 	fwrite($handle, PHP_EOL . $newName . '|' . $newNumber);
 	fclose($handle);
 }
 
+
+//--------OPTION 3 - SEARCHING THROUGH CONTACTS-------//
 function searchContact() {
-	print_r(contactArray());
-	
-	
+	contactArray();
+	$filtered = [];
+	foreach ($contactsArray as $name) {
+		if (stripos($contactsArray['name'], $name) !== false) {
+			$filtered[] = $name;
+		} 
+	} return($filtered);
+} 
+echo searchContact($contactsArray);
 
 
-} echo searchContact();
 
-function contactArray() {
+
+//--------TURNING LIST OF CONTACTS INTO AN ARRAY----------//
+function contactArray() { 
 	$contactsArray = [];
 	$filename = 'contacts.txt';
 	$handle = trim(file_get_contents($filename));
@@ -64,3 +74,4 @@ function options() {
 	} while ($startingOption != 5);
 
 } 
+echo options();
