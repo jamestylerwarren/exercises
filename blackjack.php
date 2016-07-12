@@ -14,10 +14,7 @@ function buildDeck($cards) {
 	$suitOut = array_rand($cards[$randomCard]);
 	$randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
 	unset($cards[$randomCard][$suitOut]);
-	var_dump($cards);
 	return $randomCard . ' ' . $randomSuit . PHP_EOL;
-
-
 } echo buildDeck($cards);
 
 // determine if a card is an ace
@@ -25,9 +22,8 @@ function buildDeck($cards) {
 function cardIsAce($randomCard) {
 	if ($randomCard == 'Ace') {
 		return "True\n";
-	} else {
+	} 
 		return "False\n";
-	}
 } 
 
 // determine the value of an individual card (string)
