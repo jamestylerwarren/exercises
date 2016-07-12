@@ -11,16 +11,19 @@ $cards = ['Ace' => ['C', 'H', 'S', 'D'], '2' => ['C', 'H', 'S', 'D'], '3' => ['C
 // make sure to shuffle the deck before returning it
 function buildDeck($cards) {
 	$randomCard = array_rand($cards); //picking a random card
-	$randomSuit = $cards[$randomCard][array_rand($cards[$randomCard])]; //within the random card array, picking a random suit
+	$suitOut = array_rand($cards[$randomCard]);
+	$randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
+	unset($cards[$randomCard][$suitOut]);
+	var_dump($cards);
 	return $randomCard . ' ' . $randomSuit . PHP_EOL;
-	// shuffle($cards);
+
 
 } echo buildDeck($cards);
 
 // determine if a card is an ace
 // return true for ace, false for anything else
-function cardIsAce($randCard) {
-	if ($randCard == 'Ace') {
+function cardIsAce($randomCard) {
+	if ($randomCard == 'Ace') {
 		return "True\n";
 	} else {
 		return "False\n";
