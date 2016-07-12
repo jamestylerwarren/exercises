@@ -13,3 +13,10 @@ logMessage("INFO", "This is an info message.");
 logMessage("ERROR", "This is an info message.");
 
 
+function logInfo($message) {	
+	logMessage ('INFO', $message);
+}
+
+function logError('Error', $message) {
+	logMessage('ERROR', $message);
+}
