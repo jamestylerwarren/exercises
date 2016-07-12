@@ -14,25 +14,25 @@ function buildDeck($cards) {
 	$suitOut = array_rand($cards[$randomCard]);
 	$randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
 	unset($cards[$randomCard][$suitOut]);
-	return $randomCard . ' ' . $randomSuit . PHP_EOL;
-} echo buildDeck($cards);
+	print_r($randomCard . ' ' . $randomSuit . PHP_EOL);
+}
 
 // determine if a card is an ace
 // return true for ace, false for anything else
 function cardIsAce($randomCard) {
+	buildDeck($cards);
 	if ($randomCard == 'Ace') {
 		return "True\n";
 	} 
 		return "False\n";
-} 
-
+} echo cardIsAce($randomCard);
 // determine the value of an individual card (string)
 // aces are worth 11
 // face cards are worth 10
 // numeric cards are worth their value
-function getCardValue($cards, $randCard) {
+function getCardValue($cards, $randomCard) {
 	foreach ($cards as $value) {
-		if ($value == 'A') {
+		if ($value == 'Ace') {
 			return 11;
 		} elseif ($value == 'Jack' || $value == 'Queen' || $value == 'King') {
 			return 10;
