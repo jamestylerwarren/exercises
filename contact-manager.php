@@ -36,6 +36,20 @@ function searchContact() {
 } 
 
 
+//--------OPTION 4 - DELETING CONTACT------------------//
+function deleteContact() {
+	$contacts = contactArray();
+	fwrite(STDOUT, "Please enter name to delete: ") . PHP_EOL;
+	$searchName = trim(fgets(STDIN));
+	foreach ($contacts as $contact) {
+		if (stripos($contact['name'], $searchName) !== false) {
+			
+		} 
+	} 
+	var_dump($contacts);
+}
+
+
 //--------TURNING LIST OF CONTACTS INTO AN ARRAY----------//
 function contactArray() { 
 	$contactsArray = [];
@@ -59,13 +73,13 @@ function optionMenu() {
 		$startingOption = trim(fgets(STDIN));
 		if ($startingOption == 1) {
 			echo PHP_EOL . 'Name | Phone Number' . PHP_EOL;
-			print_r(viewContacts());	
+			echo viewContacts();	
 		} elseif ($startingOption == 2) {
-			print_r(addContact());
+			 echo addContact();
 		} elseif ($startingOption == 3) {
-			print_r(searchContact());
+			echo searchContact();
 		} elseif ($startingOption == 4) {
-			print_r('Deleting a contact....' . PHP_EOL);
+			echo deleteContact();;
 		} elseif ($startingOption == 5) {
 			exit(0);
 		} else {
