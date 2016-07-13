@@ -44,9 +44,15 @@ function deleteContact() {
 	foreach ($contacts as $contact => $info) {
 		if (stripos($info['name'], $searchName) !== false) {
 			unset($contacts[$contact]);
+			continue;
 		} 
-		implode("|", $contact);
+		$contacts[$contact] = implode("|", $info);
 	}
+	$contacts = implode("\n", $contacts);
+	$filename = 'contacts.txt';
+	$handle = fopen($filename, 'w');
+	fwrite($handle, $contacts);
+	fclose($handle);
 }
 
 
@@ -67,6 +73,7 @@ function contactArray() {
 } 
 
 
+// -----------OPTIONS MENU-----------------------------//
 function optionMenu() {
 	do {
 		fwrite(STDOUT, "1. View contacts\n2. Add a new contact\n3. Search a contact by name\n4. Delete an existing contact\n5. Exit\nEnter an option (1, 2, 3, 4 or 5): ") . PHP_EOL . PHP_EOL;
