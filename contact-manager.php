@@ -41,12 +41,12 @@ function deleteContact() {
 	$contacts = contactArray();
 	fwrite(STDOUT, "Please enter name to delete: ") . PHP_EOL;
 	$searchName = trim(fgets(STDIN));
-	foreach ($contacts as $contact) {
-		if (stripos($contact['name'], $searchName) !== false) {
-			
+	foreach ($contacts as $contact => $info) {
+		if (stripos($info['name'], $searchName) !== false) {
+			unset($contacts[$contact]);
 		} 
-	} 
-	var_dump($contacts);
+		implode("|", $contact);
+	}
 }
 
 
@@ -69,7 +69,7 @@ function contactArray() {
 
 function optionMenu() {
 	do {
-		fwrite(STDOUT, "1. View contacts\n2. Add a new contact\n3. Search a contact bby name\n4. Delete an existing contact\n5. Exit\nEnter an option (1, 2, 3, 4 or 5): ") . PHP_EOL . PHP_EOL;
+		fwrite(STDOUT, "1. View contacts\n2. Add a new contact\n3. Search a contact by name\n4. Delete an existing contact\n5. Exit\nEnter an option (1, 2, 3, 4 or 5): ") . PHP_EOL . PHP_EOL;
 		$startingOption = trim(fgets(STDIN));
 		if ($startingOption == 1) {
 			echo PHP_EOL . 'Name | Phone Number' . PHP_EOL;
