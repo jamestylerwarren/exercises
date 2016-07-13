@@ -22,17 +22,16 @@ function addContact() {
 
 //--------OPTION 3 - SEARCHING THROUGH CONTACTS-------//
 function searchContact() {
-	contactArray();
-	$filtered = [];
-	foreach ($contactsArray as $name) {
-		if (stripos($contactsArray['name'], $name) !== false) {
-			$filtered[] = $name;
+	$contacts = contactArray();
+	$search = [];
+	fwrite(STDOUT, "Please enter name: ") . PHP_EOL;
+	$searchName = trim(fgets(STDIN));
+	foreach ($contacts as $contact) {
+		if (stripos($contact['name'], $searchName) !== false) {
+			$search[] = $contact;
 		} 
-	} return($filtered);
+	} return($search);
 } 
-echo searchContact($contactsArray);
-
-
 
 
 //--------TURNING LIST OF CONTACTS INTO AN ARRAY----------//
@@ -52,7 +51,7 @@ function contactArray() {
 } 
 
 
-function options() {
+function optionMenu() {
 	do {
 		fwrite(STDOUT, "1. View contacts\n2. Add a new contact\n3. Search a contact bby name\n4. Delete an existing contact\n5. Exit\nEnter an option (1, 2, 3, 4 or 5): ") . PHP_EOL . PHP_EOL;
 		$startingOption = trim(fgets(STDIN));
@@ -62,7 +61,7 @@ function options() {
 		} elseif ($startingOption == 2) {
 			print_r(addContact());
 		} elseif ($startingOption == 3) {
-			print_r('Searching contacts....' . PHP_EOL);
+			print_r(searchContact());
 		} elseif ($startingOption == 4) {
 			print_r('Deleting a contact....' . PHP_EOL);
 		} elseif ($startingOption == 5) {
@@ -74,4 +73,5 @@ function options() {
 	} while ($startingOption != 5);
 
 } 
-echo options();
+echo optionMenu();
+
