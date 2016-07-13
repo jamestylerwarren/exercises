@@ -30,7 +30,9 @@ function searchContact() {
 		if (stripos($contact['name'], $searchName) !== false) {
 			$search[] = $contact;
 		} 
-	} return($search);
+	} 
+	$searchedName = implode('|', $search[0]);
+	return $searchedName . PHP_EOL . PHP_EOL;
 } 
 
 
