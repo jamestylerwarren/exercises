@@ -12,3 +12,6 @@ function removeVowels(&$array) {
 	return $array;
 }
 var_dump(removeVowels($array));
+
+
+$noVowels = preg_repace('aeiou', '', $array);
