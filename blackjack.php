@@ -6,17 +6,33 @@ $suits = ['C', 'H', 'S', 'D'];
 $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 
 
+$hands = [
+	[0] = [
+		'card' = 'Ace',
+		'suit = ']
+]
 // build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
-function buildDeck($cards) {
-	$randomCard = array_rand($cards); //picking a random card
-	$suitOut = array_rand($cards[$randomCard]);
-	$randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
-	unset($cards[$randomCard][$suitOut]);
-	$randomHand = $randomCard . ' ' . $randomSuit;
-	echo $randomHand;
-	return $randomCard;
+function buildDeck($cards, $suits) {
+	foreach ($cards as $card) {
+		foreach ($suits as $suit) {
+			
+		}
+		
+	}
+
+
+
+
+
+	// $randomCard = array_rand($cards); //picking a random card
+	// $suitOut = array_rand($cards[$randomCard]);
+	// $randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
+	// unset($cards[$randomCard][$suitOut]);
+	// $randomHand = $randomCard . ' ' . $randomSuit;
+	// echo $randomHand;
+	// return $randomCard;
 
 } echo buildDeck($cards);
 
