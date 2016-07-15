@@ -5,28 +5,21 @@ $suits = ['C', 'H', 'S', 'D'];
 // create an array for cards
 $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 
-
-$hands = [
-	[0] = [
-		'card' = 'Ace',
-		'suit = ']
-]
 // build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
 function buildDeck($cards, $suits) {
-	foreach ($cards as $card) {
-		foreach ($suits as $suit) {
-			
+	$deck = [];
+	foreach ($suits as $suit) {
+		foreach ($cards as $card) {
+			$deck[] = ['card' => $card, 'suit' => $suit];
 		}
-		
 	}
 
-
-
-
-
-	// $randomCard = array_rand($cards); //picking a random card
+	$randomCard = array_rand($deck); //picking a random card
+	unset($deck[$randomCard]);
+	shuffle($deck);
+	print_r($deck);
 	// $suitOut = array_rand($cards[$randomCard]);
 	// $randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
 	// unset($cards[$randomCard][$suitOut]);
@@ -34,12 +27,17 @@ function buildDeck($cards, $suits) {
 	// echo $randomHand;
 	// return $randomCard;
 
-} echo buildDeck($cards);
+} echo buildDeck($cards, $suits);
+
+
+
+
+
 
 // determine if a card is an ace
 // return true for ace, false for anything else
 function cardIsAce() {
-	$aceCard = buildDeck($cards);
+	$aceCard = buildDeck($cards, $suits);
 	if ($aceCard == 'Ace') {
 		return "True\n";
 	} 
