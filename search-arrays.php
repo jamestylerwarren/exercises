@@ -27,6 +27,9 @@ function compareArrays($names, $compare) {
 	return ($count) . PHP_EOL;
 } 
 echo compareArrays($names, $compare);
+
+$num = 3;
+var_dump($num++);
 	
 
 
