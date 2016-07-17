@@ -19,7 +19,7 @@ function buildDeck($cards, $suits) {
 	}
 	shuffle($deck);
 	return $deck;
-}
+} 
 
 
 
@@ -42,24 +42,32 @@ function cardIsAce($cards, $suits) {
 // aces are worth 11
 // face cards are worth 10
 // numeric cards are worth their value
-function getCardValue($cards) {
-	foreach ($cards as $value) {
-		if ($value == 'Ace') {
-			return 11;
-		} elseif ($value == 'Jack' || $value == 'Queen' || $value == 'King') {
-			return 10;
-		} else {
-			return intval($value);
-		}
+function getCardValue($card) {
+	if ($card == 'Ace') {
+		return 11;
+	} elseif ($card == 'Jack' || $card == 'Queen' || $card == 'King') {
+		return 10;
+	} else {
+		return intval($card);
 	}
 } 
 
 // get total value for a hand of cards
 // don't forget to factor in aces
 // aces can be 1 or 11 (make them 1 if total value is over 21)
-function getHandTotal($hand) {
-
-}
+function getHandTotal($cards, $suits) {
+	$deck = buildDeck($cards, $suits);  //building the deck to draw from by calling buildDeck function
+	$randomCardOne = array_rand($deck); //picking a random key out of the deck
+	$randomCardOneValue = getCardValue($deck[$randomCardOne]['card']); //saving the numeric value of the card that was radomly chosen using the getCardValue function
+	var_dump($randomCardOneValue);
+	unset($deck[$randomCardOne]);
+	$randomCardTwo = array_rand($deck);
+	$randomCardTwoValue = getCardValue($deck[$randomCardTwo]['card']);
+	var_dump($randomCardTwoValue);
+	unset($deck[$randomCardTwo]);
+	$randomHandTotal = $randomCardOneValue + $randomCardTwoValue;
+	return $randomHandTotal;
+} print_r(getHandTotal($cards, $suits));
 
 // draw a card from the deck into a hand
 // pass by reference (both hand and deck passed in are modified)
