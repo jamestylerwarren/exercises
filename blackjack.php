@@ -5,6 +5,8 @@ $suits = ['C', 'H', 'S', 'D'];
 // create an array for cards
 $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 
+
+
 // build a deck (array) of cards
 // card values should be "VALUE SUIT". ex: "7 H"
 // make sure to shuffle the deck before returning it
@@ -17,27 +19,30 @@ function buildDeck($cards, $suits) {
 	}
 	shuffle($deck);
 	return $deck;
-} 
-
-
-
+}
 
 
 
 // determine if a card is an ace
 // return true for ace, false for anything else
-function cardIsAce() {
-	$aceCard = buildDeck($cards, $suits);
-	if ($aceCard == 'Ace') {
+function cardIsAce($cards, $suits) {
+	$cardQuery = buildDeck($cards, $suits);
+	$randomCards = array_rand($cardQuery);
+	$randomCard = ($cardQuery[$randomCards]['card']);
+	if ($randomCard == 'Ace') {
 		return "True\n";
 	} 
 		return "False\n";
 } 
+
+
+
+
 // determine the value of an individual card (string)
 // aces are worth 11
 // face cards are worth 10
 // numeric cards are worth their value
-function getCardValue($cards, $randomCard) {
+function getCardValue($cards) {
 	foreach ($cards as $value) {
 		if ($value == 'Ace') {
 			return 11;
@@ -47,7 +52,7 @@ function getCardValue($cards, $randomCard) {
 			return intval($value);
 		}
 	}
-}  
+} 
 
 // get total value for a hand of cards
 // don't forget to factor in aces
