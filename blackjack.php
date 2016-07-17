@@ -56,15 +56,25 @@ function getCardValue($card) {
 // don't forget to factor in aces
 // aces can be 1 or 11 (make them 1 if total value is over 21)
 function getHandTotal($cards, $suits) {
+	$deck = buildDeck($cards, $suits);
+	do {
+		# code...
+	} while ($randomHandTotal <= 21);
+
 	$deck = buildDeck($cards, $suits);  //building the deck to draw from by calling buildDeck function
 	$randomCardOne = array_rand($deck); //picking a random key out of the deck
 	$randomCardOneValue = getCardValue($deck[$randomCardOne]['card']); //saving the numeric value of the card that was radomly chosen using the getCardValue function
 	var_dump($randomCardOneValue);
 	unset($deck[$randomCardOne]);
+	
+
+
 	$randomCardTwo = array_rand($deck);
 	$randomCardTwoValue = getCardValue($deck[$randomCardTwo]['card']);
 	var_dump($randomCardTwoValue);
 	unset($deck[$randomCardTwo]);
+
+
 	$randomHandTotal = $randomCardOneValue + $randomCardTwoValue;
 	return $randomHandTotal;
 } print_r(getHandTotal($cards, $suits));

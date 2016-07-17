@@ -19,26 +19,29 @@ function buildDeck($cards, $suits) {
 } 
 
 
-//this function draws a random card from the deck
+//this function draws a random card from the deck and returns it. Also takes the card out of the deck
 function drawCard($cards, $suits) {
 	$deck = buildDeck($cards, $suits);
 	$randomKey = array_rand($deck);
 	$randomCard = $deck[$randomKey];
+	unset($deck[$randomKey]);
 	return $randomCard;
 } 
 
-
 //this function gets the value of a card drawn out of the deck
-function getValue($cards, $suits) {
-	$randomCard = drawCard($cards, $suits);
-	$randomCardValue = $randomCard['card'];
-	print_r($randomCardValue);
-	if ($randomCardValue == 'Ace') {
+function getCardValue($card) {
+	if ($card == 'Ace') {
 		return 11;
-	} elseif ($randomCardValue == 'Jack' || $randomCardValue == 'Queen' || $randomCardValue == 'King') {
+	} elseif ($card == 'Jack' || $card == 'Queen' || $card == 'King') {
 		return 10;
 	} else {
-		return intval($randomCardValue);
+		return intval($card);
 	}
 } 
+
+
+
+
+
+
 
