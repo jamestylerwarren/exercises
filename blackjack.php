@@ -15,19 +15,9 @@ function buildDeck($cards, $suits) {
 			$deck[] = ['card' => $card, 'suit' => $suit];
 		}
 	}
-
-	$randomCard = array_rand($deck); //picking a random card
-	unset($deck[$randomCard]);
 	shuffle($deck);
-	print_r($deck);
-	// $suitOut = array_rand($cards[$randomCard]);
-	// $randomSuit = $cards[$randomCard][$suitOut]; //within the random card array, picking a random suit
-	// unset($cards[$randomCard][$suitOut]);
-	// $randomHand = $randomCard . ' ' . $randomSuit;
-	// echo $randomHand;
-	// return $randomCard;
-
-} echo buildDeck($cards, $suits);
+	return $deck;
+} 
 
 
 
