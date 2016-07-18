@@ -39,8 +39,33 @@ function getCardValue($card) {
 	}
 } 
 
+//this function evaluates whether the card is an ace or not.
+function cardIsAce($card) {
+	if ($card == 'Ace') {
+		return true;
+	} 
+		return false;
+} 
 
 
+
+//this function will get the total for a hand of cards
+function getTotal($hand) {
+	$total = 0;
+	foreach ($hand as $card) {
+		$total += getCardValue($card);
+		$ace = cardIsAce($card);
+		if ($total > 21 && $ace) {
+			$total = $total - 10;
+		}
+	}
+	return $total;
+}
+
+
+
+$dealer = [];
+$player = [];
 
 
 
