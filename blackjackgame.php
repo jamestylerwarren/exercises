@@ -20,8 +20,7 @@ function buildDeck($cards, $suits) {
 
 
 //this function draws a random card from the deck and returns it. Also takes the card out of the deck
-function drawCard($cards, $suits) {
-	$deck = buildDeck($cards, $suits);
+function drawACard(&$deck) {
 	$randomKey = array_rand($deck);
 	$randomCard = $deck[$randomKey];
 	unset($deck[$randomKey]);
@@ -49,7 +48,7 @@ function cardIsAce($card) {
 
 
 
-//this function will get the total for a hand of cards
+//this function will get the total for a hand of cards using the getCardValue and cardIsAce functions
 function getTotal($hand) {
 	$total = 0;
 	foreach ($hand as $card) {
@@ -62,10 +61,41 @@ function getTotal($hand) {
 	return $total;
 }
 
-
+$deck = buildDeck($cards, $suits);
 
 $dealer = [];
 $player = [];
+
+
+//this function draws two cards and puts them into an array
+function drawCard(&$deck, &$hand) {
+	$cardOne = drawACard($deck);
+	$hand[] = $cardOne;
+	$cardTwo = drawACard($deck);
+	$hand[] = $cardTwo;
+	return $hand;
+} print_r(drawCard($deck, $player));
+
+
+
+fwrite(STDOUT, "Enter name: ") . PHP_EOL;
+	$name = trim(fgets(STDIN));
+
+
+
+function echoHand(&$hand, $name, $hidden = false) {
+	print_r($hand);
+	echo $name . ': [' . $hand[0]['card'] . ' ' . $hand[0]['suit'] . '] [' . $hand[1]['card'] . ' ' . $hand[1]['suit'] . ']';
+} echoHand($player, $name);
+
+
+
+
+
+
+
+
+
 
 
 
