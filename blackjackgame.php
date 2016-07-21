@@ -51,7 +51,8 @@ function cardIsAce($card) {
 //this function will get the total for a hand of cards using the getCardValue and cardIsAce functions
 function getTotal($hand) {
 	$total = 0;
-	foreach ($hand as $card) {
+	foreach ($hand as $card => $value) {
+		print_r($value);
 		$total += getCardValue($card);
 		$ace = cardIsAce($card);
 		if ($total > 21 && $ace) {
@@ -59,7 +60,7 @@ function getTotal($hand) {
 		}
 	}
 	return $total;
-}
+} 
 
 $deck = buildDeck($cards, $suits);
 
@@ -74,7 +75,7 @@ function drawCard(&$deck, &$hand) {
 	$cardTwo = drawACard($deck);
 	$hand[] = $cardTwo;
 	return $hand;
-} print_r(drawCard($deck, $player));
+} 
 
 
 
@@ -84,10 +85,12 @@ fwrite(STDOUT, "Enter name: ") . PHP_EOL;
 
 
 function echoHand(&$hand, $name, $hidden = false) {
-	print_r($hand);
-	echo $name . ': [' . $hand[0]['card'] . ' ' . $hand[0]['suit'] . '] [' . $hand[1]['card'] . ' ' . $hand[1]['suit'] . ']';
-} echoHand($player, $name);
-
+	$total = getTotal($hand);
+	echo $name . ': [' . $hand[0]['card'] . ' ' . $hand[0]['suit'] . '] [' . $hand[1]['card'] . ' ' . $hand[1]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
+} 
+// echoHand($player, $name);
+drawCard($deck, $player);
+print_r(getTotal($player));
 
 
 
