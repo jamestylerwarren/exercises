@@ -1,7 +1,7 @@
 <?php
 require_once 'Log.php';
 
-$logger = new Log();
+$logger = new Log('cli');
 
 $message = 'This is a test';
 $logger->logInfo($message);
