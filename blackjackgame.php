@@ -51,11 +51,11 @@ function cardIsAce($card) {
 //this function will get the total for a hand of cards using the getCardValue and cardIsAce functions
 function getTotal($hand) {
 	$total = 0;
+	var_dump($hand);
 	foreach ($hand as $card => $value) {
-		print_r($value);
+		var_dump(getCardValue($card));
 		$total += getCardValue($card);
-		$ace = cardIsAce($card);
-		if ($total > 21 && $ace) {
+		if ($total > 21 && cardIsAce($card)) {
 			$total = $total - 10;
 		}
 	}
@@ -69,7 +69,7 @@ $player = [];
 
 
 //this function draws two cards and puts them into an array
-function drawCard(&$deck, &$hand) {
+function drawHand(&$deck, &$hand) {
 	$cardOne = drawACard($deck);
 	$hand[] = $cardOne;
 	$cardTwo = drawACard($deck);
@@ -79,8 +79,8 @@ function drawCard(&$deck, &$hand) {
 
 
 
-fwrite(STDOUT, "Enter name: ") . PHP_EOL;
-	$name = trim(fgets(STDIN));
+// fwrite(STDOUT, "Enter name: ") . PHP_EOL;
+// 	$name = trim(fgets(STDIN));
 
 
 
@@ -88,10 +88,15 @@ function echoHand(&$hand, $name, $hidden = false) {
 	$total = getTotal($hand);
 	echo $name . ': [' . $hand[0]['card'] . ' ' . $hand[0]['suit'] . '] [' . $hand[1]['card'] . ' ' . $hand[1]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
 } 
-// echoHand($player, $name);
-drawCard($deck, $player);
-print_r(getTotal($player));
 
+
+drawHand($deck, $player);
+var_dump(getTotal($player));
+// print_r(getCardValue($player[0]['card'])) . PHP_EOL;
+// print_r(getCardValue($player[1]['card'])) . PHP_EOL;
+// print_r(getTotal($player)) . PHP_EOL;
+
+// echoHand($player, $name, false);
 
 
 
