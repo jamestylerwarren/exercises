@@ -103,6 +103,15 @@ echoPlayer($player, $name, false);
 echoDealer($dealer, true);
 
 
+//ask player to (H)it or (S)tay
+fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
+	$decision = trim(fgets(STDIN));
+
+//while player selects hit:
+while ($decision == 'H') {
+	$newCard = drawACard($deck);
+	$player[] = $newCard;
+}
 
 
 
