@@ -51,10 +51,8 @@ function cardIsAce($card) {
 //this function will get the total for a hand of cards using the getCardValue and cardIsAce functions
 function getTotal($hand) {
 	$total = 0;
-	var_dump($hand);
 	foreach ($hand as $card => $value) {
-		var_dump(getCardValue($card));
-		$total += getCardValue($card);
+		$total += getCardValue($value['card']);
 		if ($total > 21 && cardIsAce($card)) {
 			$total = $total - 10;
 		}
@@ -62,13 +60,15 @@ function getTotal($hand) {
 	return $total;
 } 
 
-$deck = buildDeck($cards, $suits);
 
+//Build the deck of cards
+$deck = buildDeck($cards, $suits);
+// initialize a dealer and player hand
 $dealer = [];
 $player = [];
 
 
-//this function draws two cards and puts them into an array
+//this function draws two cards and puts them into an array - $player or $dealer
 function drawHand(&$deck, &$hand) {
 	$cardOne = drawACard($deck);
 	$hand[] = $cardOne;
@@ -78,27 +78,29 @@ function drawHand(&$deck, &$hand) {
 } 
 
 
+//ask for player name
+fwrite(STDOUT, "Enter name: ") . PHP_EOL;
+	$name = trim(fgets(STDIN));
 
-// fwrite(STDOUT, "Enter name: ") . PHP_EOL;
-// 	$name = trim(fgets(STDIN));
 
+//echo out player's hand and total
+function echoPlayer(&$player, $name, $hidden = false) {
+	$total = getTotal($player);
+	echo $name . ': [' . $player[0]['card'] . ' ' . $player[0]['suit'] . '] [' . $player[1]['card'] . ' ' . $player[1]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
 
-
-function echoHand(&$hand, $name, $hidden = false) {
-	$total = getTotal($hand);
-	echo $name . ': [' . $hand[0]['card'] . ' ' . $hand[0]['suit'] . '] [' . $hand[1]['card'] . ' ' . $hand[1]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
 } 
 
+function echoDealer(&$dealer, $hidden = false) {
+	$total = $total = getTotal($dealer);
+	if ($hidden) {
+		echo 'Dealer: [' . $dealer[0]['card'] . ' ' . $dealer[0]['suit'] . '] [???] TOTAL= ???' . PHP_EOL;
+	}
+}
 
 drawHand($deck, $player);
-var_dump(getTotal($player));
-// print_r(getCardValue($player[0]['card'])) . PHP_EOL;
-// print_r(getCardValue($player[1]['card'])) . PHP_EOL;
-// print_r(getTotal($player)) . PHP_EOL;
-
-// echoHand($player, $name, false);
-
-
+drawHand($deck, $dealer);
+echoPlayer($player, $name, false);
+echoDealer($dealer, true);
 
 
 
