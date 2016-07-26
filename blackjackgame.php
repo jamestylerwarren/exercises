@@ -109,11 +109,18 @@ fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 	$decision = strtolower($decision);
 
 
+
 //while player selects hit:
-while ($decision == 'h') {
+while (getTotal($player) < 21) {
+	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
+	$decision = trim(fgets(STDIN));
+	$decision = strtolower($decision);
 	$newCard = drawACard($deck);
 	$player[] = $newCard;
-	echoPlayer($player, $name, $hidden = false);
+	$total = getTotal($player);
+	echo $name . ': [' . $player[0]['card'] . ' ' . $player[0]['suit'] . '] [' . $player[1]['card'] . ' ' . $player[1]['suit'] . '] [' . $player[2]['card'] . ' ' . $player[2]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
+
+	
 }
 
 
