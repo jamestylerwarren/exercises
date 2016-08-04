@@ -1,14 +1,16 @@
 <?php
 
-class rectangle {
-	public $height;
-	public $width;
-	public function __construct($height, $width) {
+class Rectangle {
+	public function __construct($width, $height) {
 		$this->height = $height;
 		$this->width = $width;
 	}
+
 	public function area(){
-		$area = ($this->height * $this->width);
-		return $area;
+		return ($this->height * $this->width);
+	}
+	
+	public function perimeter() {
+		return ($this->height * 2) + ($this->width * 2);
 	}
 }
