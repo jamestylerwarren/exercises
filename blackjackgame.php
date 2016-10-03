@@ -94,13 +94,16 @@ function echoDealer(&$dealer, $hidden = false) {
 	$total = $total = getTotal($dealer);
 	if ($hidden) {
 		echo 'Dealer: [' . $dealer[0]['card'] . ' ' . $dealer[0]['suit'] . '] [???] TOTAL= ???' . PHP_EOL;
+	} else {
+		echo 'Dealer: [' . $dealer[0]['card'] . ' ' . $dealer[0]['suit'] . '] [' . $dealer[1]['card'] . ' ' . $dealer[1]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
 	}
 }
 
 drawHand($deck, $player);
 drawHand($deck, $dealer);
-echoPlayer($player, $name, false);
 echoDealer($dealer, true);
+echoPlayer($player, $name, false);
+
 
 
 
@@ -109,20 +112,55 @@ while (getTotal($player) <= 21) {
 	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 	$decision = strtolower(trim(fgets(STDIN)));
 	if ($decision == 's') {
+		echoDealer($dealer, false);
+		while (getTotal($dealer) < 17) {
+			$newCard = drawACard($deck);
+			$dealer[] = $newCard;
+			$total = getTotal($dealer);
+			//echo out each card and total
+			foreach ($dealer as $card) {
+				echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+			}
+			echo 'Dealer total = ' . $total . PHP_EOL;
+			}
+			//notify when dealer busts
+			if (getTotal($dealer) > 21) {
+				echo 'Dealer busted! ' . $name . ' wins!' . PHP_EOL;
+				break;
+		}
+		//Evaluate Hands
+		if (getTotal($player) == getTotal($dealer)) {
+			echo $name . ' and Dealer push!' . PHP_EOL;
+		}
+		if (getTotal($player) > getTotal($dealer)) {
+			echo $name . ' wins!' . PHP_EOL;
+		}
+		if (getTotal($player) < getTotal($dealer)) {
+			echo 'Dealer wins! ' . $name . ' loses.' . PHP_EOL;
+		}
 		break;
 	} elseif ($decision == 'h') {
 		$newCard = drawACard($deck);
 		$player[] = $newCard;
 		$total = getTotal($player);
+		//echo out each card and total
 		foreach ($player as $card) {
 			echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
 		}
-		echo 'TOTAL = ' . $total . PHP_EOL;
-	}
-	if (getTotal($player) > 21) {
-		echo $name . ' busted! Dealer wins.' . PHP_EOL;
+		echo $name . ' total = ' . $total . PHP_EOL;
+		//notify when player hits 21
+		if (getTotal($player) == 21) {
+			echo 'Blackjack!! ' . $name . ' wins!' . PHP_EOL;
+			break;
+		}
+		//notify when player busts
+		if (getTotal($player) > 21) {
+			echo $name . ' busted! Dealer wins.' . PHP_EOL;
+			break;
+		}
 	}
 }
+
 
 
 
