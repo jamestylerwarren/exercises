@@ -1,9 +1,23 @@
 <?php
 
-// complete all "todo"s to build a blackjack game
-$suits = ['C', 'H', 'S', 'D'];
 // create an array for cards
+$suits = ['C', 'H', 'S', 'D'];
 $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+
+//Build the deck of cards
+$deck = buildDeck($cards, $suits);
+// initialize a dealer and player hand
+$dealer = [];
+$player = [];
+
+//ask for player name
+fwrite(STDOUT, "Enter name: ") . PHP_EOL;
+	$name = trim(fgets(STDIN));
+
+drawHand($deck, $player);
+drawHand($deck, $dealer);
+echoDealer($dealer, true);
+echoPlayer($player, $name);
 
 
 //this function builds a deck of cards from the $suits and $cards array, shuffles and returns the deck
@@ -17,7 +31,6 @@ function buildDeck($cards, $suits) {
 	shuffle($deck);
 	return $deck;
 } 
-
 
 //this function draws a random card from the deck and returns it. Also takes the card out of the deck
 function drawACard(&$deck) {
@@ -46,8 +59,6 @@ function cardIsAce($card) {
 		return false;
 } 
 
-
-
 //this function will get the total for a hand of cards using the getCardValue and cardIsAce functions
 function getTotal($hand) {
 	$total = 0;
@@ -60,14 +71,6 @@ function getTotal($hand) {
 	return $total;
 } 
 
-
-//Build the deck of cards
-$deck = buildDeck($cards, $suits);
-// initialize a dealer and player hand
-$dealer = [];
-$player = [];
-
-
 //this function draws two cards and puts them into an array - $player or $dealer
 function drawHand(&$deck, &$hand) {
 	$cardOne = drawACard($deck);
@@ -77,14 +80,8 @@ function drawHand(&$deck, &$hand) {
 	return $hand;
 } 
 
-
-//ask for player name
-fwrite(STDOUT, "Enter name: ") . PHP_EOL;
-	$name = trim(fgets(STDIN));
-
-
 //echo out player's hand and total
-function echoPlayer(&$player, $name, $hidden = false) {
+function echoPlayer(&$player, $name) {
 	$total = getTotal($player);
 	echo $name . ': [' . $player[0]['card'] . ' ' . $player[0]['suit'] . '] [' . $player[1]['card'] . ' ' . $player[1]['suit'] . '] TOTAL= ' . $total . PHP_EOL;
 
@@ -99,10 +96,87 @@ function echoDealer(&$dealer, $hidden = false) {
 	}
 }
 
-drawHand($deck, $player);
-drawHand($deck, $dealer);
-echoDealer($dealer, true);
-echoPlayer($player, $name, false);
+function playAgain($name) {
+	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
+	$choice = trim(fgets(STDIN));
+	while ($choice == 'y') {
+		echo "Okay, shuffle up and deal!" . PHP_EOL;
+		// create an array for cards
+		$suits = ['C', 'H', 'S', 'D'];
+		$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+		//Build the deck of cards
+		$deck = buildDeck($cards, $suits);
+		// initialize a dealer and player hand
+		$dealer = [];
+		$player = [];
+		buildDeck($cards, $suits);
+		drawHand($deck, $player);
+		drawHand($deck, $dealer);
+		echoDealer($dealer, true);
+		echoPlayer($player, $name);
+		//player must select (H)it or (S)tay
+		while (getTotal($player) <= 21) {
+			fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
+			$decision = strtolower(trim(fgets(STDIN)));
+			//Stay option
+			if ($decision == 's') {
+				echoDealer($dealer, false);
+				while (getTotal($dealer) < 17) {
+					$newCard = drawACard($deck);
+					$dealer[] = $newCard;
+					$total = getTotal($dealer);
+					//echo out each card and total
+					foreach ($dealer as $card) {
+						echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+					}
+					echo 'Dealer total = ' . $total . PHP_EOL;
+					}
+					//notify when dealer busts
+					if (getTotal($dealer) > 21) {
+						echo 'Dealer busted! ' . $name . ' wins!' . PHP_EOL;
+						playAgain($name);
+				}
+				//Evaluate Hands
+				if (getTotal($player) == getTotal($dealer)) {
+					echo $name . ' and Dealer push!' . PHP_EOL;
+				}
+				if (getTotal($player) > getTotal($dealer)) {
+					echo $name . ' wins!' . PHP_EOL;
+				}
+				if (getTotal($player) < getTotal($dealer)) {
+					echo 'Dealer wins! ' . $name . ' loses.' . PHP_EOL;
+				}
+				playAgain($name);
+
+			//Hit option
+			} elseif ($decision == 'h') {
+				$newCard = drawACard($deck);
+				$player[] = $newCard;
+				$total = getTotal($player);
+				//echo out each card and total
+				foreach ($player as $card) {
+					echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+				}
+				echo $name . ' total = ' . $total . PHP_EOL;
+				//notify when player hits 21
+				if (getTotal($player) == 21) {
+					echo 'Blackjack!! ' . $name . ' wins!' . PHP_EOL;
+					playAgain($name);
+				}
+				//notify when player busts
+				if (getTotal($player) > 21) {
+					echo $name . ' busted! Dealer wins.' . PHP_EOL;
+					playAgain($name);
+				}
+			}
+		}
+	}
+	echo "Ok, thanks for playing " . $name . "!" . PHP_EOL;
+	exit();
+}
+
+
+
 
 
 
@@ -111,6 +185,7 @@ echoPlayer($player, $name, false);
 while (getTotal($player) <= 21) {
 	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 	$decision = strtolower(trim(fgets(STDIN)));
+	//Stay option
 	if ($decision == 's') {
 		echoDealer($dealer, false);
 		while (getTotal($dealer) < 17) {
@@ -126,7 +201,7 @@ while (getTotal($player) <= 21) {
 			//notify when dealer busts
 			if (getTotal($dealer) > 21) {
 				echo 'Dealer busted! ' . $name . ' wins!' . PHP_EOL;
-				break;
+				playAgain($name);
 		}
 		//Evaluate Hands
 		if (getTotal($player) == getTotal($dealer)) {
@@ -138,7 +213,9 @@ while (getTotal($player) <= 21) {
 		if (getTotal($player) < getTotal($dealer)) {
 			echo 'Dealer wins! ' . $name . ' loses.' . PHP_EOL;
 		}
-		break;
+		playAgain($name);
+
+	//Hit option
 	} elseif ($decision == 'h') {
 		$newCard = drawACard($deck);
 		$player[] = $newCard;
@@ -151,12 +228,12 @@ while (getTotal($player) <= 21) {
 		//notify when player hits 21
 		if (getTotal($player) == 21) {
 			echo 'Blackjack!! ' . $name . ' wins!' . PHP_EOL;
-			break;
+			playAgain($name);
 		}
 		//notify when player busts
 		if (getTotal($player) > 21) {
 			echo $name . ' busted! Dealer wins.' . PHP_EOL;
-			break;
+			playAgain($name);
 		}
 	}
 }
