@@ -96,6 +96,8 @@ function echoDealer(&$dealer, $hidden = false) {
 	}
 }
 
+
+
 function playAgain($name) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = trim(fgets(STDIN));
@@ -237,8 +239,6 @@ while (getTotal($player) <= 21) {
 		}
 	}
 }
-
-
 
 
 
