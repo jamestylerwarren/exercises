@@ -1,64 +1,36 @@
 <?php
 
 //Problem One:
-$numInteger = 8;
+// $num = 25;
 
-function toNumber($numInteger) {
-	switch ($numInteger){
-		case '1':
-			echo 'one';
-			break;
-		case '2':
-			echo 'two';
-			break;
-		case '3':
-			echo 'three';
-			break;
-		case '4':
-			echo 'four';
-			break;
-		case '5':
-			echo 'five';
-			break;
-		case '6':
-			echo 'six';
-			break;
-		case '7':
-			echo 'seven';
-			break;
-		case '8':
-			echo 'eight';
-			break;
-		default:
-			echo 'nine';
+// function square($num) {
+// 	$message = "false" . PHP_EOL;
+// 	for ($i=0; $i < $num; $i++) { 
+// 		if ($i * $i == $num) {
+// 			$message = "true" . PHP_EOL;
+// 		} 
+// 	}
+// 	return $message;
+// }
+// print square($num);
+
+
+
+
+
+//Problem 4:
+$pin = '7611';
+function pincheck($pin) {
+	$message = 'true' . PHP_EOL;
+	if (strlen($pin) < 4 || strlen($pin) > 6) {
+		$message = 'false' . PHP_EOL; 
 	}
+	if (strcspn($pin, 'ABCDEFGHJIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') < 0) {
+		$message = 'false' . PHP_EOL;
+	}
+	return $message;
 }
-toNumber($numInteger);
-
-
-//problem two:
-
-$integerOne = 100;
-$integerTwo = 40;
-
-function greatestDiviser($integerOne, $integerTwo)
-{
-    while ($integerTwo != 0)
-    {
-        $modulus = $integerOne % $integerTwo;
-        $integerOne = $integerTwo;
-        $integerTwo = $modulus;
-    }
-    return $integerOne;
-}
-print_r(greatestDiviser($integerOne, $integerTwo));
-
-
-//problem three:
-$fibonacci = 21;
-$j = $fibonacci - 1;
-$i = $fibonacci - 2;
-
+print pincheck($pin);
 
 
 
