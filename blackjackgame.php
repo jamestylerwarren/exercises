@@ -12,7 +12,17 @@ $player = [];
 
 //ask for player name
 fwrite(STDOUT, "Enter name: ") . PHP_EOL;
-	$name = trim(fgets(STDIN));
+$name = ucfirst(trim(fgets(STDIN)));
+
+do {
+	fwrite(STDOUT, "Enter your bankroll (table limit = $1,000,000): ") . PHP_EOL;
+	$bankroll = trim(fgets(STDIN));
+} while ($bankroll <= 0 || $bankroll > 1000000 || !is_numeric($bankroll));
+
+do {
+	fwrite(STDOUT, "Enter bet: ") . PHP_EOL;
+	$bet = trim(fgets(STDIN));
+} while ($bet <= 0 || $bet > $bankroll || !is_numeric($bet));
 
 drawHand($deck, $player);
 drawHand($deck, $dealer);
@@ -96,8 +106,6 @@ function echoDealer(&$dealer, $hidden = false) {
 	}
 }
 
-
-
 function playAgain($name) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = trim(fgets(STDIN));
@@ -117,7 +125,7 @@ function playAgain($name) {
 		echoDealer($dealer, true);
 		echoPlayer($player, $name);
 		//player must select (H)it or (S)tay
-		while (getTotal($player) <= 21) {
+		while (getTotal($player) < 21) {
 			fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 			$decision = strtolower(trim(fgets(STDIN)));
 			//Stay option
@@ -172,6 +180,8 @@ function playAgain($name) {
 				}
 			}
 		}
+		echo 'Blackjack!! ' . $name . ' wins!' . PHP_EOL;
+		playAgain($name);
 	}
 	echo "Ok, thanks for playing " . $name . "!" . PHP_EOL;
 	exit();
@@ -184,7 +194,7 @@ function playAgain($name) {
 
 
 //player must select (H)it or (S)tay
-while (getTotal($player) <= 21) {
+while (getTotal($player) < 21) {
 	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 	$decision = strtolower(trim(fgets(STDIN)));
 	//Stay option
@@ -239,7 +249,8 @@ while (getTotal($player) <= 21) {
 		}
 	}
 }
-
+echo 'Blackjack!! ' . $name . ' wins!' . PHP_EOL;
+playAgain($name);
 
 
 
