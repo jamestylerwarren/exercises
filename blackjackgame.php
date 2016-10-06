@@ -108,6 +108,19 @@ function echoDealer(&$dealer, $hidden = false) {
 	}
 }
 
+//allow player ability to double down 
+function doubleDown($bet) {
+	fwrite(STDOUT, "Would you like to double down? (y)es or (n)o? ") . PHP_EOL;
+	$doubleDown = strtolower(trim(fgets(STDIN)));
+	if ($doubleDown == 'y') {
+		$bet = ($bet*2);
+		echo "Ok you doubled your wager to $" . $bet . '.' . PHP_EOL;
+		return $bet;
+	} else {
+		return $bet;
+	}
+}
+
 function playAgain($name, $bankroll, $bet) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = strtolower(trim(fgets(STDIN)));
@@ -139,6 +152,8 @@ function playAgain($name, $bankroll, $bet) {
 			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 			playAgain($name, $bankroll, $bet);
 		}
+		//double down option
+		$bet = doubleDown($bet);
 		//player must select (H)it or (S)tay
 		while (getTotal($player) < 21) {
 			fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
@@ -211,6 +226,8 @@ if (getTotal($player) == 21) {
 	echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 	playAgain($name, $bankroll, $bet);
 }
+//double down option
+$bet = doubleDown($bet);
 //player must select (H)it or (S)tay
 while (getTotal($player) < 21) {
 	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
