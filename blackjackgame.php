@@ -6,6 +6,7 @@ $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 
 
 //Build the deck of cards
 $deck = buildDeck($cards, $suits);
+
 // initialize a dealer and player hand
 $dealer = [];
 $player = [];
@@ -99,6 +100,7 @@ function echoPlayer(&$player, $name) {
 
 } 
 
+//echo dealer hand, hidden or not hidden
 function echoDealer(&$dealer, $hidden = false) {
 	$total = $total = getTotal($dealer);
 	if ($hidden) {
@@ -121,7 +123,7 @@ function doubleDown($bet) {
 	}
 }
 
-function playAgain($name, $bankroll, $bet) {
+function playAgain($cards, $suits, $name, $bankroll, $bet) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = strtolower(trim(fgets(STDIN)));
 	while ($choice == 'y') {
@@ -132,9 +134,6 @@ function playAgain($name, $bankroll, $bet) {
 			fwrite(STDOUT, "Enter bet: ") . PHP_EOL;
 			$bet = trim(fgets(STDIN));
 		} while ($bet <= 0 || $bet > $bankroll || !is_numeric($bet));
-		// create an array for cards
-		$suits = ['C', 'H', 'S', 'D'];
-		$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 		//Build the deck of cards
 		$deck = buildDeck($cards, $suits);
 		// initialize a dealer and player hand
@@ -150,7 +149,7 @@ function playAgain($name, $bankroll, $bet) {
 			$bankroll += ($bet * 1.25);
 			echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.25) . '!' . PHP_EOL;
 			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-			playAgain($name, $bankroll, $bet);
+			playAgain($cards, $suits, $name, $bankroll, $bet);
 		}
 		//double down option
 		$bet = doubleDown($bet);
@@ -176,7 +175,7 @@ function playAgain($name, $bankroll, $bet) {
 						$bankroll += $bet;
 						echo 'Dealer busted! ' . $name . ' wins $' . $bet . '!' . PHP_EOL;
 						echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-						playAgain($name, $bankroll, $bet);
+						playAgain($cards, $suits, $name, $bankroll, $bet);
 				}
 				//Evaluate Hands
 				if (getTotal($player) == getTotal($dealer)) {
@@ -190,7 +189,7 @@ function playAgain($name, $bankroll, $bet) {
 					echo 'Dealer wins! ' . $name . ' loses ' . $bet . '!' . PHP_EOL;
 					echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 				}
-				playAgain($name, $bankroll, $bet);
+				playAgain($cards, $suits, $name, $bankroll, $bet);
 
 			//Hit option
 			} elseif ($decision == 'h') {
@@ -207,7 +206,7 @@ function playAgain($name, $bankroll, $bet) {
 					$bankroll -= $bet;
 					echo $name . ' busted! Dealer wins.' . PHP_EOL;
 					echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-					playAgain($name, $bankroll, $bet);
+					playAgain($cards, $suits, $name, $bankroll, $bet);
 				}
 			}
 		}
@@ -224,7 +223,7 @@ if (getTotal($player) == 21) {
 	$bankroll += ($bet * 1.25);
 	echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.25) . '!' . PHP_EOL;
 	echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-	playAgain($name, $bankroll, $bet);
+	playAgain($cards, $suits, $name, $bankroll, $bet);
 }
 //double down option
 $bet = doubleDown($bet);
@@ -250,7 +249,7 @@ while (getTotal($player) < 21) {
 				$bankroll += $bet;
 				echo 'Dealer busted! ' . $name . ' wins $' . $bet . '!' . PHP_EOL;
 				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-				playAgain($name, $bankroll, $bet);
+				playAgain($cards, $suits, $name, $bankroll, $bet);
 		}
 		//Evaluate Hands
 		if (getTotal($player) == getTotal($dealer)) {
@@ -265,7 +264,7 @@ while (getTotal($player) < 21) {
 			echo 'Dealer wins! ' . $name . ' loses ' . $bet . '!' . PHP_EOL;
 			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 		}
-		playAgain($name, $bankroll, $bet);
+		playAgain($cards, $suits, $name, $bankroll, $bet);
 
 	//Hit option
 	} elseif ($decision == 'h') {
@@ -282,7 +281,7 @@ while (getTotal($player) < 21) {
 			$bankroll -= $bet;
 			echo $name . ' busted! Dealer wins.' . PHP_EOL;
 			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-			playAgain($name, $bankroll, $bet);
+			playAgain($cards, $suits, $name, $bankroll, $bet);
 		}
 	}
 }
