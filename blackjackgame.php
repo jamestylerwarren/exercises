@@ -110,7 +110,7 @@ function echoDealer(&$dealer, $hidden = false) {
 
 function playAgain($name, $bankroll, $bet) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
-	$choice = trim(fgets(STDIN));
+	$choice = strtolower(trim(fgets(STDIN)));
 	while ($choice == 'y') {
 		echo "Okay, shuffle up and deal!" . PHP_EOL;
 		echo "Bankroll = $" . $bankroll . '.' . PHP_EOL;
@@ -132,6 +132,13 @@ function playAgain($name, $bankroll, $bet) {
 		drawHand($deck, $dealer);
 		echoDealer($dealer, true);
 		echoPlayer($player, $name);
+		//tell player if they hit blackjack
+		if (getTotal($player) == 21) {
+			$bankroll += ($bet * 1.25);
+			echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.25) . '!' . PHP_EOL;
+			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+			playAgain($name, $bankroll, $bet);
+		}
 		//player must select (H)it or (S)tay
 		while (getTotal($player) < 21) {
 			fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
@@ -161,8 +168,7 @@ function playAgain($name, $bankroll, $bet) {
 					echo $name . ' and Dealer push! Bankroll still at ' . $bankroll . '.' . PHP_EOL;
 				} elseif (getTotal($player) > getTotal($dealer)) {
 					$bankroll += $bet;
-					echo $name . ' wins!' . PHP_EOL;
-					echo $name . ' wins ' . $bet . '!' . PHP_EOL;
+					echo $name . ' wins ' . $bet . PHP_EOL;
 					echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 				} elseif (getTotal($player) < getTotal($dealer)) {
 					$bankroll -= $bet;
@@ -190,9 +196,6 @@ function playAgain($name, $bankroll, $bet) {
 				}
 			}
 		}
-		echo 'Blackjack!! ' . $name . ' wins!' . PHP_EOL;
-		echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
-		playAgain($name, $bankroll, $bet);
 	}
 	echo "Ok, thanks for playing " . $name . "!" . PHP_EOL;
 	exit();
@@ -201,9 +204,13 @@ function playAgain($name, $bankroll, $bet) {
 
 
 
-
-
-
+//tell player if they hit blackjack
+if (getTotal($player) == 21) {
+	$bankroll += ($bet * 1.25);
+	echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.25) . '!' . PHP_EOL;
+	echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+	playAgain($name, $bankroll, $bet);
+}
 //player must select (H)it or (S)tay
 while (getTotal($player) < 21) {
 	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
@@ -262,9 +269,7 @@ while (getTotal($player) < 21) {
 		}
 	}
 }
-$bankroll += ($bet * 1.25);
-echo 'Blackjack!! You have $' . $bankroll . ' behind you!' . PHP_EOL;
-playAgain($name, $bankroll, $bet);
+
 
 
 
