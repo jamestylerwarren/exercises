@@ -20,6 +20,14 @@ function determineBankroll() {
 	return $bankroll;
 }
 
+function checkBankroll($bankroll) {
+	if ($bankroll == 0) {
+		fwrite(STDOUT, "You need to reload your bankroll. ") . PHP_EOL; 
+		$bankroll = determineBankroll();
+	}
+	return $bankroll;
+}
+
 // determine bet size
 function enterBet($bankroll) {
 	do {
@@ -124,6 +132,8 @@ function playAgain($cards, $suits, $name, $bankroll, $bet) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = strtolower(trim(fgets(STDIN)));
 	while ($choice == 'y') {
+		//check player bankroll
+		$bankroll = checkBankroll($bankroll);
 		echo "Okay, shuffle up and deal!" . PHP_EOL;
 		echo "Bankroll = $" . $bankroll . '.' . PHP_EOL;
 		//determine bet size
