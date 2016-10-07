@@ -4,33 +4,30 @@
 $suits = ['C', 'H', 'S', 'D'];
 $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 
-//Build the deck of cards
-$deck = buildDeck($cards, $suits);
-
-// initialize a dealer and player hand
-$dealer = [];
-$player = [];
-
 //ask for player name
-fwrite(STDOUT, "Enter name: ") . PHP_EOL;
-$name = ucfirst(trim(fgets(STDIN)));
+function enterName() {
+	fwrite(STDOUT, "Enter name: ") . PHP_EOL;
+	$name = ucfirst(trim(fgets(STDIN)));
+	return $name;
+}
 
 // determine player bankroll
-do {
-	fwrite(STDOUT, "Enter your bankroll (table limit = $1,000,000): ") . PHP_EOL;
-	$bankroll = trim(fgets(STDIN));
-} while ($bankroll <= 0 || $bankroll > 1000000 || !is_numeric($bankroll));
+function determineBankroll() {
+	do {
+		fwrite(STDOUT, "Enter your bankroll (table limit = $1,000,000): ") . PHP_EOL;
+		$bankroll = trim(fgets(STDIN));
+	} while ($bankroll <= 0 || $bankroll > 1000000 || !is_numeric($bankroll));
+	return $bankroll;
+}
 
 // determine bet size
-do {
-	fwrite(STDOUT, "Enter bet: ") . PHP_EOL;
-	$bet = trim(fgets(STDIN));
-} while ($bet <= 0 || $bet > $bankroll || !is_numeric($bet));
-
-drawHand($deck, $player);
-drawHand($deck, $dealer);
-echoDealer($dealer, true);
-echoPlayer($player, $name);
+function enterBet($bankroll) {
+	do {
+		fwrite(STDOUT, "Enter bet: ") . PHP_EOL;
+		$bet = trim(fgets(STDIN));
+	} while ($bet <= 0 || $bet > $bankroll || !is_numeric($bet));
+	return $bet;
+}
 
 
 //this function builds a deck of cards from the $suits and $cards array, shuffles and returns the deck
@@ -100,7 +97,7 @@ function echoPlayer(&$player, $name) {
 
 } 
 
-//echo dealer hand, hidden or not hidden
+//echo dealer hand, hidden during the hand, not hidden otherwise
 function echoDealer(&$dealer, $hidden = false) {
 	$total = $total = getTotal($dealer);
 	if ($hidden) {
@@ -130,10 +127,7 @@ function playAgain($cards, $suits, $name, $bankroll, $bet) {
 		echo "Okay, shuffle up and deal!" . PHP_EOL;
 		echo "Bankroll = $" . $bankroll . '.' . PHP_EOL;
 		//determine bet size
-		do {
-			fwrite(STDOUT, "Enter bet: ") . PHP_EOL;
-			$bet = trim(fgets(STDIN));
-		} while ($bet <= 0 || $bet > $bankroll || !is_numeric($bet));
+		$bet = enterBet($bankroll);
 		//Build the deck of cards
 		$deck = buildDeck($cards, $suits);
 		// initialize a dealer and player hand
@@ -216,7 +210,18 @@ function playAgain($cards, $suits, $name, $bankroll, $bet) {
 }
 
 
-
+//Build the deck of cards
+$deck = buildDeck($cards, $suits);
+// initialize a dealer and player hand
+$dealer = [];
+$player = [];
+$name = enterName();
+$bankroll = determineBankroll();
+$bet = enterBet($bankroll);
+drawHand($deck, $player);
+drawHand($deck, $dealer);
+echoDealer($dealer, true);
+echoPlayer($player, $name);
 
 //tell player if they hit blackjack
 if (getTotal($player) == 21) {
