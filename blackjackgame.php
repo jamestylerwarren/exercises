@@ -116,13 +116,17 @@ function echoDealer(&$dealer, $hidden = false) {
 }
 
 //allow player ability to double down 
-function doubleDown($bet) {
-	fwrite(STDOUT, "Would you like to double down? (y)es or (n)o? ") . PHP_EOL;
-	$doubleDown = strtolower(trim(fgets(STDIN)));
-	if ($doubleDown == 'y') {
-		$bet = ($bet*2);
-		echo "Ok you doubled your wager to $" . $bet . '.' . PHP_EOL;
-		return $bet;
+function doubleDown($bet, $bankroll) {
+	if ($bankroll >= ($bet*2)) {
+		fwrite(STDOUT, "Would you like to double down? (y)es or (n)o? ") . PHP_EOL;
+		$doubleDown = strtolower(trim(fgets(STDIN)));
+		if ($doubleDown == 'y') {
+			$bet = ($bet*2);
+			echo "Ok you doubled your wager to $" . $bet . '.' . PHP_EOL;
+			return $bet;
+		} else {
+			return $bet;
+		}
 	} else {
 		return $bet;
 	}
@@ -150,15 +154,15 @@ function playAgain($cards, $suits, $name, $bankroll, $bet) {
 		echoPlayer($player, $name);
 		//tell player if they hit blackjack
 		if (getTotal($player) == 21) {
-			$bankroll += ($bet * 1.25);
-			echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.25) . '!' . PHP_EOL;
+			$bankroll += ($bet * 1.5);
+			echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.5) . '!' . PHP_EOL;
 			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 			playAgain($cards, $suits, $name, $bankroll, $bet);
 		}
 		//double down option
-		$bet = doubleDown($bet);
+		$bet = doubleDown($bet, $bankroll);
 		//player must select (H)it or (S)tay
-		while (getTotal($player) < 21) {
+		while (getTotal($player) < 22) {
 			fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 			$decision = strtolower(trim(fgets(STDIN)));
 			//Stay option
@@ -235,15 +239,15 @@ echoPlayer($player, $name);
 
 //tell player if they hit blackjack
 if (getTotal($player) == 21) {
-	$bankroll += ($bet * 1.25);
-	echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.25) . '!' . PHP_EOL;
+	$bankroll += ($bet * 1.50);
+	echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
 	echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 	playAgain($cards, $suits, $name, $bankroll, $bet);
 }
 //double down option
-$bet = doubleDown($bet);
+$bet = doubleDown($bet, $bankroll);
 //player must select (H)it or (S)tay
-while (getTotal($player) < 21) {
+while (getTotal($player) < 22) {
 	fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
 	$decision = strtolower(trim(fgets(STDIN)));
 	//Stay option
@@ -271,8 +275,7 @@ while (getTotal($player) < 21) {
 			echo $name . ' and Dealer push! Bankroll still at ' . $bankroll . '.' . PHP_EOL;
 		} elseif (getTotal($player) > getTotal($dealer)) {
 			$bankroll += $bet;
-			echo $name . ' wins!' . PHP_EOL;
-			echo $name . ' wins ' . $bet . '!' . PHP_EOL;
+			echo $name . ' wins ' . $bet . PHP_EOL;
 			echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 		} elseif (getTotal($player) < getTotal($dealer)) {
 			$bankroll -= $bet;
