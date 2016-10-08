@@ -142,11 +142,21 @@ function splitCards($player, $name, $bankroll, $bet, $deck) {
 			//create two hands, both of which contain one of the cards from previous hand, both with the assigned bet
 				//draw a card to each new hand
 
-			$splitHand = [];
-			drawHand($deck, $splitHand);
-			echoPlayer($splitHand, $name);
-			$splitBet = $bet;
-			return ['splitHand' => $splitHand, 'splitBet' => $splitBet];
+			$firstSplitHandCardOne = $player[0];
+			$firstSplitHand[] = $firstSplitHandCardOne;
+			$firstSplitHandCardTwo = drawACard($deck);
+			$firstSplitHand[] = $firstSplitHandCardTwo;
+			$firstSplitHandBet = $bet;
+			echoPlayer($firstSplitHand, $name);
+
+			$secondSplitHandCardOne = $player[1];
+			$secondSplitHand[] = $secondSplitHandCardOne;
+			$secondSplitHandCardTwo = drawACard($deck);
+			$secondSplitHand[] = $secondSplitHandCardTwo;
+			$secondSplitHandBet = $bet;
+			echoPlayer($secondSplitHand, $name);
+
+			return ['firstSplitHand' => $firstSplitHand, 'firstSplitHandBet' => $firstSplitHandBet, 'secondSplitHand' => $secondSplitHand, 'secondSplitHandBet' => $secondSplitHandBet];
 		}
 	}
 }
@@ -180,7 +190,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 		playAgain($name, $bankroll, $bet);
 	}
 	//split option here
-	// splitCards($player, $name, $bankroll, $bet, $deck);
+	splitCards($player, $name, $bankroll, $bet, $deck);
 
 	//double down option
 	$bet = doubleDown($bet, $bankroll);
@@ -245,8 +255,6 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 }
 
 function playAgain($name, $bankroll, $bet) {
-	$suits = ['C', 'H', 'S', 'D'];
-	$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = strtolower(trim(fgets(STDIN)));
 	while ($choice == 'y') {
@@ -257,6 +265,8 @@ function playAgain($name, $bankroll, $bet) {
 		//determine bet size
 		$bet = enterBet($bankroll);
 		//Build the deck of cards
+		$suits = ['C', 'H', 'S', 'D'];
+		$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 		$deck = buildDeck($cards, $suits);
 		// initialize a dealer and player hand
 		$dealer = [];
