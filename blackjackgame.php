@@ -1,9 +1,5 @@
 <?php
 
-// create an array for cards
-$suits = ['C', 'H', 'S', 'D'];
-$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
-
 //ask for player name
 function enterName() {
 	fwrite(STDOUT, "Enter name: ") . PHP_EOL;
@@ -162,7 +158,10 @@ function splitCards($player, $name, $bankroll, $bet, $deck) {
 }
 
 //sets up game - builds deck, takes player name
-function gameSetup($cards, $suits) {
+function gameSetup() {
+	// create an array for cards
+	$suits = ['C', 'H', 'S', 'D'];
+	$cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 	//take player name
 	$name = enterName();
 	//Build the deck of cards
