@@ -184,6 +184,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 		$bankroll += ($bet * 1.50);
 		echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
 		echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+		echo '---------------------------------------------------' . PHP_EOL;
 		playAgain($name, $bankroll, $bet);
 	}
 	//split option here
@@ -223,7 +224,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) > getTotal($dealer)) {
 				$bankroll += $bet;
-				echo $name . ' wins ' . $bet . PHP_EOL;
+				echo $name . ' wins ' . $bet . '!' . PHP_EOL;
 				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) < getTotal($dealer)) {
