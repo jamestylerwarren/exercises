@@ -161,13 +161,15 @@ function splitCards($player, $name, $bankroll, $bet, $deck) {
 	}
 }
 
+//sets up game - builds deck, takes player name
 function gameSetup($cards, $suits) {
+	//take player name
+	$name = enterName();
 	//Build the deck of cards
 	$deck = buildDeck($cards, $suits);
 	// initialize a dealer and player hand
 	$dealer = [];
 	$player = [];
-	$name = enterName();
 	$bankroll = determineBankroll();
 	$bet = enterBet($bankroll);
 	drawHand($deck, $player);
@@ -213,19 +215,23 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 					$bankroll += $bet;
 					echo 'Dealer busted! ' . $name . ' wins $' . $bet . '!' . PHP_EOL;
 					echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+					echo '---------------------------------------------------' . PHP_EOL;
 					playAgain($name, $bankroll, $bet);
 			}
 			//Evaluate Hands
 			if (getTotal($player) == getTotal($dealer)) {
 				echo $name . ' and Dealer push! Bankroll still at ' . $bankroll . '.' . PHP_EOL;
+				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) > getTotal($dealer)) {
 				$bankroll += $bet;
 				echo $name . ' wins ' . $bet . PHP_EOL;
 				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) < getTotal($dealer)) {
 				$bankroll -= $bet;
 				echo 'Dealer wins! ' . $name . ' loses ' . $bet . '!' . PHP_EOL;
 				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+				echo '---------------------------------------------------' . PHP_EOL;
 			}
 			playAgain($name, $bankroll, $bet);
 
@@ -244,6 +250,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 				$bankroll -= $bet;
 				echo $name . ' busted! Dealer wins.' . PHP_EOL;
 				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+				echo '---------------------------------------------------' . PHP_EOL;
 				playAgain($name, $bankroll, $bet);
 			}
 		}
@@ -276,6 +283,8 @@ function playAgain($name, $bankroll, $bet) {
 	echo "Ok, thanks for playing " . $name . "!" . PHP_EOL;
 	exit();
 }
+
+//function that starts game;
 gameSetup($cards, $suits);
 
 
