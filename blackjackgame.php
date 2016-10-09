@@ -82,7 +82,7 @@ function getTotal($hand) {
 	$total = 0;
 	foreach ($hand as $card => $value) {
 		$total += getCardValue($value['card']);
-		if ($total > 21 && cardIsAce($card)) {
+		if ($total > 21 && cardIsAce($value['card'])) {
 			$total = $total - 10;
 		}
 	}
@@ -161,8 +161,6 @@ function splitCards($player, $name, $bankroll, $bet, $deck) {
 	}
 }
 
-
-
 function gameSetup($cards, $suits) {
 	//Build the deck of cards
 	$deck = buildDeck($cards, $suits);
@@ -177,9 +175,7 @@ function gameSetup($cards, $suits) {
 	echoDealer($dealer, true);
 	echoPlayer($player, $name);
 	gamePlay($deck, $player, $dealer, $name, $bankroll, $bet);
-}	
-
-
+}
 
 function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 	//tell player if they hit blackjack
@@ -190,7 +186,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 		playAgain($name, $bankroll, $bet);
 	}
 	//split option here
-	splitCards($player, $name, $bankroll, $bet, $deck);
+	//splitCards($player, $name, $bankroll, $bet, $deck);
 
 	//double down option
 	$bet = doubleDown($bet, $bankroll);
@@ -280,7 +276,6 @@ function playAgain($name, $bankroll, $bet) {
 	echo "Ok, thanks for playing " . $name . "!" . PHP_EOL;
 	exit();
 }
-
 gameSetup($cards, $suits);
 
 
