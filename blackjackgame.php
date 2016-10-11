@@ -134,13 +134,23 @@ function doubleDown($bet, $bankroll) {
 }
 
 //allow player to take insurance
-function insurance($dealer, $bankroll) {
+function playerInsurance($name, $dealer, $bet, $bankroll) {
 	if ($dealer[0]['card'] == 'Ace') {
 		fwrite(STDOUT, "Do you want insurance? (y)es or (n)o? ") . PHP_EOL;
 		$choice = strtolower(trim(fgets(STDIN)));
 		if ($choice == 'y') {
 			$insuranceBet = enterBet($bankroll);
-			return $insuranceBet;
+			if ($dealer[0]['card'] == 'Ace' && getCardValue($dealer[1]['card']) == 10) {
+			$bankroll += (2 * $insuranceBet);
+			$bankroll -= $bet;
+			echo 'Dealer wins! ' . PHP_EOL;
+			echoBankroll($bankroll);
+			echo '---------------------------------------------------' . PHP_EOL;
+			playAgain($name, $bankroll, $bet);
+			} else {
+				echo "Dealer doesn't have blackjack." . PHP_EOL;
+				return $insuranceBet;
+			}
 		}
 	}
 }
@@ -207,7 +217,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 		playAgain($name, $bankroll, $bet);
 	}
 	//insurance bet?
-	$insuranceBet = insurance($dealer, $bankroll);
+	$insuranceBet = playerInsurance($name, $dealer, $bet, $bankroll);
 
 	//split option here
 	//splitCards($player, $name, $bankroll, $bet, $deck);
@@ -244,6 +254,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 			//Evaluate Hands
 			if (getTotal($player) == getTotal($dealer)) {
 				echo $name . ' and Dealer push!' . PHP_EOL;
+				$bankroll -= $insuranceBet;
 				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) > getTotal($dealer)) {
@@ -254,7 +265,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) < getTotal($dealer)) {
 				$bankroll -= $bet;
-				$bankroll += $insuranceBet;
+				$bankroll -= $insuranceBet;
 				echo 'Dealer wins! ' . PHP_EOL;
 				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
@@ -274,7 +285,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 			//notify when player busts
 			if (getTotal($player) > 21) {
 				$bankroll -= $bet;
-				$bankroll += $insuranceBet;
+				$bankroll -= $insuranceBet;
 				echo $name . ' busted! Dealer wins.' . PHP_EOL;
 				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
