@@ -111,6 +111,11 @@ function echoDealer(&$dealer, $hidden = false) {
 	}
 }
 
+//echo bankroll
+function echoBankroll($bankroll) {
+	echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+}
+
 //allow player ability to double down 
 function doubleDown($bet, $bankroll) {
 	if ($bankroll >= ($bet*2)) {
@@ -128,34 +133,48 @@ function doubleDown($bet, $bankroll) {
 	}
 }
 
-//allow ability to split hand
-function splitCards($player, $name, $bankroll, $bet, $deck) {
-	//if two cards are same value and ($bankroll >= ($bet*2)), ask if they want to split cards
-	if (getCardValue($player[0]['card']) == getCardValue($player[1]['card']) && $bankroll >= ($bet*2)) {
-		fwrite(STDOUT, 'Do you want to split your hand? (y)es or (n)o? ') . PHP_EOL;
+//allow player to take insurance
+function insurance($dealer, $bankroll) {
+	if ($dealer[0]['card'] == 'Ace') {
+		fwrite(STDOUT, "Do you want insurance? (y)es or (n)o? ") . PHP_EOL;
 		$choice = strtolower(trim(fgets(STDIN)));
 		if ($choice == 'y') {
-			//create two hands, both of which contain one of the cards from previous hand, both with the assigned bet
-				//draw a card to each new hand
-
-			$firstSplitHandCardOne = $player[0];
-			$firstSplitHand[] = $firstSplitHandCardOne;
-			$firstSplitHandCardTwo = drawACard($deck);
-			$firstSplitHand[] = $firstSplitHandCardTwo;
-			$firstSplitHandBet = $bet;
-			echoPlayer($firstSplitHand, $name);
-
-			$secondSplitHandCardOne = $player[1];
-			$secondSplitHand[] = $secondSplitHandCardOne;
-			$secondSplitHandCardTwo = drawACard($deck);
-			$secondSplitHand[] = $secondSplitHandCardTwo;
-			$secondSplitHandBet = $bet;
-			echoPlayer($secondSplitHand, $name);
-
-			return ['firstSplitHand' => $firstSplitHand, 'firstSplitHandBet' => $firstSplitHandBet, 'secondSplitHand' => $secondSplitHand, 'secondSplitHandBet' => $secondSplitHandBet];
+			$insuranceBet = enterBet($bankroll);
+			return $insuranceBet;
 		}
 	}
 }
+
+
+
+// //allow ability to split hand
+// function splitCards($player, $name, $bankroll, $bet, $deck) {
+// 	//if two cards are same value and ($bankroll >= ($bet*2)), ask if they want to split cards
+// 	if (getCardValue($player[0]['card']) == getCardValue($player[1]['card']) && $bankroll >= ($bet*2)) {
+// 		fwrite(STDOUT, 'Do you want to split your hand? (y)es or (n)o? ') . PHP_EOL;
+// 		$choice = strtolower(trim(fgets(STDIN)));
+// 		if ($choice == 'y') {
+// 			//create two hands, both of which contain one of the cards from previous hand, both with the assigned bet
+// 				//draw a card to each new hand
+
+// 			$firstSplitHandCardOne = $player[0];
+// 			$firstSplitHand[] = $firstSplitHandCardOne;
+// 			$firstSplitHandCardTwo = drawACard($deck);
+// 			$firstSplitHand[] = $firstSplitHandCardTwo;
+// 			$firstSplitHandBet = $bet;
+// 			echoPlayer($firstSplitHand, $name);
+
+// 			$secondSplitHandCardOne = $player[1];
+// 			$secondSplitHand[] = $secondSplitHandCardOne;
+// 			$secondSplitHandCardTwo = drawACard($deck);
+// 			$secondSplitHand[] = $secondSplitHandCardTwo;
+// 			$secondSplitHandBet = $bet;
+// 			echoPlayer($secondSplitHand, $name);
+
+// 			return ['firstSplitHand' => $firstSplitHand, 'firstSplitHandBet' => $firstSplitHandBet, 'secondSplitHand' => $secondSplitHand, 'secondSplitHandBet' => $secondSplitHandBet];
+// 		}
+// 	}
+// }
 
 //sets up game - builds deck, takes player name
 function gameSetup() {
@@ -183,10 +202,13 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 	if (getTotal($player) == 21) {
 		$bankroll += ($bet * 1.50);
 		echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
-		echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+		echoBankroll($bankroll);
 		echo '---------------------------------------------------' . PHP_EOL;
 		playAgain($name, $bankroll, $bet);
 	}
+	//insurance bet?
+	$insuranceBet = insurance($dealer, $bankroll);
+
 	//split option here
 	//splitCards($player, $name, $bankroll, $bet, $deck);
 
@@ -213,24 +235,28 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 				//notify when dealer busts
 				if (getTotal($dealer) > 21) {
 					$bankroll += $bet;
-					echo 'Dealer busted! ' . $name . ' wins $' . $bet . '!' . PHP_EOL;
-					echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+					$bankroll -= $insuranceBet;
+					echo 'Dealer busted! ' . PHP_EOL;
+					echoBankroll($bankroll);
 					echo '---------------------------------------------------' . PHP_EOL;
 					playAgain($name, $bankroll, $bet);
 			}
 			//Evaluate Hands
 			if (getTotal($player) == getTotal($dealer)) {
-				echo $name . ' and Dealer push! Bankroll still at ' . $bankroll . '.' . PHP_EOL;
+				echo $name . ' and Dealer push!' . PHP_EOL;
+				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) > getTotal($dealer)) {
 				$bankroll += $bet;
-				echo $name . ' wins ' . $bet . '!' . PHP_EOL;
-				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+				$bankroll -= $insuranceBet;
+				echo $name . ' wins ' . PHP_EOL;
+				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($player) < getTotal($dealer)) {
 				$bankroll -= $bet;
-				echo 'Dealer wins! ' . $name . ' loses ' . $bet . '!' . PHP_EOL;
-				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+				$bankroll += $insuranceBet;
+				echo 'Dealer wins! ' . PHP_EOL;
+				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 			}
 			playAgain($name, $bankroll, $bet);
@@ -248,8 +274,9 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 			//notify when player busts
 			if (getTotal($player) > 21) {
 				$bankroll -= $bet;
+				$bankroll += $insuranceBet;
 				echo $name . ' busted! Dealer wins.' . PHP_EOL;
-				echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
+				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 				playAgain($name, $bankroll, $bet);
 			}
