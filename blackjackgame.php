@@ -116,8 +116,38 @@ function echoBankroll($bankroll) {
 	echo 'Bankroll = $' . $bankroll . '.' . PHP_EOL;
 }
 
+//called when player hits (takes a card)
+function playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll){
+	$newCard = drawACard($deck);
+	$player[] = $newCard;
+	$total = getTotal($player);
+	//echo out each card and total
+	foreach ($player as $card) {
+		echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+	}
+	echo $name . ' total = ' . $total . PHP_EOL;
+	//notify when player busts
+	if (getTotal($player) > 21) {
+		evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
+	}
+	return $player;
+}
+
+function dealerHit ($deck, $dealer){
+	$newCard = drawACard($deck);
+	$dealer[] = $newCard;
+	$total = getTotal($dealer);
+	//echo out each card and total
+	foreach ($dealer as $card) {
+		echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+	}
+	echo 'Dealer total = ' . $total . PHP_EOL;
+	return $dealer;
+}
+
+
 //allow player ability to double down 
-function doubleDown($name, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll) {
+function doubleDown($name, $deck, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll) {
 	if ($bankroll >= ($bet*2)) {
 		fwrite(STDOUT, "Would you like to double down? (y)es or (n)o? ") . PHP_EOL;
 		$doubleDown = strtolower(trim(fgets(STDIN)));
@@ -125,18 +155,7 @@ function doubleDown($name, $player, $dealer, $insuranceBet, $deck, $bet, $bankro
 			$bet = ($bet*2);
 			echo "Ok you doubled your wager to $" . $bet . '.' . PHP_EOL;
 			//hit with only one more card and evaluate (if player>21, evaluate hand)
-			$newCard = drawACard($deck);
-			$player[] = $newCard;
-			$total = getTotal($player);
-			//echo out each card and total
-			foreach ($player as $card) {
-				echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
-			}
-			echo $name . ' total = ' . $total . PHP_EOL;
-			//notify when player busts
-			if (getTotal($player) > 21) {
-				evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
-			}
+			$player = playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll);
 			//play out dealer hand
 			echoDealer($dealer, false);
 			while (getTotal($dealer) < 17) {
@@ -257,7 +276,7 @@ function evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll) 
 	playAgain($name, $bankroll, $bet);
 }
 
-//check if player has blackjack, end hand if true
+//check if player has blackjack and end hand if true
 function blackjackCheck($name, $player, $bankroll, $bet){
 	if (getTotal($player) == 21) {
 		$bankroll += ($bet * 1.50);
@@ -268,7 +287,7 @@ function blackjackCheck($name, $player, $bankroll, $bet){
 	}
 }
 
-//sets up game - builds deck, takes player name
+//sets up game - builds deck, takes player name, bankroll, initial bet and draws & echos hands
 function gameSetup() {
 	// create an array for cards
 	$suits = ['C', 'H', 'S', 'D'];
@@ -298,7 +317,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 	//splitCards($player, $name, $bankroll, $bet, $deck);
 
 	//double down option
-	doubleDown($name, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll);
+	doubleDown($name, $deck, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll);
 
 	//player must select (H)it or (S)tay
 	while (getTotal($player) < 22) {
@@ -308,31 +327,13 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 		if ($decision == 's') {
 			echoDealer($dealer, false);
 			while (getTotal($dealer) < 17) {
-				$newCard = drawACard($deck);
-				$dealer[] = $newCard;
-				$total = getTotal($dealer);
-				//echo out each card and total
-				foreach ($dealer as $card) {
-					echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
-				}
-				echo 'Dealer total = ' . $total . PHP_EOL;
+				$dealer = dealerHit($deck, $dealer);
 			}
 			//Evaluate Hands
 			evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
 		//Hit option
 		} elseif ($decision == 'h') {
-			$newCard = drawACard($deck);
-			$player[] = $newCard;
-			$total = getTotal($player);
-			//echo out each card and total
-			foreach ($player as $card) {
-				echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
-			}
-			echo $name . ' total = ' . $total . PHP_EOL;
-			//notify when player busts
-			if (getTotal($player) > 21) {
-				evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
-			}
+			$player = playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll);
 		}
 	}
 }
@@ -363,7 +364,6 @@ function playAgain($name, $bankroll, $bet) {
 	echo "Ok, thanks for playing " . $name . "!" . PHP_EOL;
 	exit();
 }
-
 //function that starts game;
 gameSetup($cards, $suits);
 
