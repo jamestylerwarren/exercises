@@ -17,7 +17,7 @@ function determineBankroll() {
 }
 
 function checkBankroll($bankroll) {
-	if ($bankroll == 0) {
+	if ($bankroll <= 0) {
 		fwrite(STDOUT, "You need to reload your bankroll. ") . PHP_EOL; 
 		$bankroll = determineBankroll();
 	}
@@ -117,36 +117,63 @@ function echoBankroll($bankroll) {
 }
 
 //allow player ability to double down 
-function doubleDown($bet, $bankroll) {
+function doubleDown($name, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll) {
 	if ($bankroll >= ($bet*2)) {
 		fwrite(STDOUT, "Would you like to double down? (y)es or (n)o? ") . PHP_EOL;
 		$doubleDown = strtolower(trim(fgets(STDIN)));
 		if ($doubleDown == 'y') {
 			$bet = ($bet*2);
 			echo "Ok you doubled your wager to $" . $bet . '.' . PHP_EOL;
-			return $bet;
-		} else {
-			return $bet;
+			//hit with only one more card and evaluate (if player>21, evaluate hand)
+			$newCard = drawACard($deck);
+			$player[] = $newCard;
+			$total = getTotal($player);
+			//echo out each card and total
+			foreach ($player as $card) {
+				echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+			}
+			echo $name . ' total = ' . $total . PHP_EOL;
+			//notify when player busts
+			if (getTotal($player) > 21) {
+				evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
+			}
+			//play out dealer hand
+			echoDealer($dealer, false);
+			while (getTotal($dealer) < 17) {
+				$newCard = drawACard($deck);
+				$dealer[] = $newCard;
+				$total = getTotal($dealer);
+				//echo out each card and total
+				foreach ($dealer as $card) {
+					echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+				}
+				echo 'Dealer total = ' . $total . PHP_EOL;
+			}
+			//evaluate result
+			evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
 		}
-	} else {
-		return $bet;
-	}
+	} 
 }
 
 //allow player to take insurance
 function playerInsurance($name, $dealer, $bet, $bankroll) {
+	//if card showing is an Ace, ask player if they want insurance
 	if ($dealer[0]['card'] == 'Ace') {
 		fwrite(STDOUT, "Do you want insurance? (y)es or (n)o? ") . PHP_EOL;
 		$choice = strtolower(trim(fgets(STDIN)));
+		//if player wants insurance
 		if ($choice == 'y') {
 			$insuranceBet = enterBet($bankroll);
-			if ($dealer[0]['card'] == 'Ace' && getCardValue($dealer[1]['card']) == 10) {
-			$bankroll += (2 * $insuranceBet);
-			$bankroll -= $bet;
-			echo 'Dealer wins! ' . PHP_EOL;
-			echoBankroll($bankroll);
-			echo '---------------------------------------------------' . PHP_EOL;
-			playAgain($name, $bankroll, $bet);
+			//if hole card has a value of 10
+			if (getCardValue($dealer[1]['card']) == 10) {
+				//echo dealer hand and end the end
+				echoDealer($dealer, $hidden = false);
+				$bankroll += (2 * $insuranceBet);
+				$bankroll -= $bet;
+				echo 'Dealer has blackjack! ' . PHP_EOL;
+				echoBankroll($bankroll);
+				echo '---------------------------------------------------' . PHP_EOL;
+				playAgain($name, $bankroll, $bet);
 			} else {
 				echo "Dealer doesn't have blackjack." . PHP_EOL;
 				return $insuranceBet;
@@ -186,6 +213,61 @@ function playerInsurance($name, $dealer, $bet, $bankroll) {
 // 	}
 // }
 
+
+//Evaluate Hands
+function evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll) {
+	//evaluate if dealer busts
+	if (getTotal($dealer) > 21) {
+		$bankroll += $bet;
+		$bankroll -= $insuranceBet;
+		echo 'Dealer busted!' . PHP_EOL;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+		//stop from proceeding to next if-block by calling playAgain
+		playAgain($name, $bankroll, $bet);
+	}
+	//evaluate if player busts
+	if (getTotal($player) > 21) {
+		$bankroll -= $bet;
+		$bankroll -= $insuranceBet;
+		echo $name . ' busted! Dealer wins.' . PHP_EOL;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+		//stop from proceeding to next if-block by calling playAgain
+		playAgain($name, $bankroll, $bet);
+	}
+	if (getTotal($player) == getTotal($dealer)) {
+		echo $name . ' and Dealer push!' . PHP_EOL;
+		$bankroll -= $insuranceBet;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+	} elseif (getTotal($player) > getTotal($dealer)) {
+		$bankroll += $bet;
+		$bankroll -= $insuranceBet;
+		echo $name . ' wins!' . PHP_EOL;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+	} elseif (getTotal($player) < getTotal($dealer)) {
+		$bankroll -= $bet;
+		$bankroll -= $insuranceBet;
+		echo 'Dealer wins!' . PHP_EOL;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+	}
+	playAgain($name, $bankroll, $bet);
+}
+
+//check if player has blackjack, end hand if true
+function blackjackCheck($name, $player, $bankroll, $bet){
+	if (getTotal($player) == 21) {
+		$bankroll += ($bet * 1.50);
+		echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+		playAgain($name, $bankroll, $bet);
+	}
+}
+
 //sets up game - builds deck, takes player name
 function gameSetup() {
 	// create an array for cards
@@ -208,22 +290,15 @@ function gameSetup() {
 }
 
 function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
-	//tell player if they hit blackjack
-	if (getTotal($player) == 21) {
-		$bankroll += ($bet * 1.50);
-		echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
-		echoBankroll($bankroll);
-		echo '---------------------------------------------------' . PHP_EOL;
-		playAgain($name, $bankroll, $bet);
-	}
+	//check if player has blackjack and end hand
+	blackjackCheck($name, $player, $bankroll, $bet); 
 	//insurance bet?
 	$insuranceBet = playerInsurance($name, $dealer, $bet, $bankroll);
-
 	//split option here
 	//splitCards($player, $name, $bankroll, $bet, $deck);
 
 	//double down option
-	$bet = doubleDown($bet, $bankroll);
+	doubleDown($name, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll);
 
 	//player must select (H)it or (S)tay
 	while (getTotal($player) < 22) {
@@ -241,37 +316,9 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 					echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
 				}
 				echo 'Dealer total = ' . $total . PHP_EOL;
-				}
-				//notify when dealer busts
-				if (getTotal($dealer) > 21) {
-					$bankroll += $bet;
-					$bankroll -= $insuranceBet;
-					echo 'Dealer busted! ' . PHP_EOL;
-					echoBankroll($bankroll);
-					echo '---------------------------------------------------' . PHP_EOL;
-					playAgain($name, $bankroll, $bet);
 			}
 			//Evaluate Hands
-			if (getTotal($player) == getTotal($dealer)) {
-				echo $name . ' and Dealer push!' . PHP_EOL;
-				$bankroll -= $insuranceBet;
-				echoBankroll($bankroll);
-				echo '---------------------------------------------------' . PHP_EOL;
-			} elseif (getTotal($player) > getTotal($dealer)) {
-				$bankroll += $bet;
-				$bankroll -= $insuranceBet;
-				echo $name . ' wins ' . PHP_EOL;
-				echoBankroll($bankroll);
-				echo '---------------------------------------------------' . PHP_EOL;
-			} elseif (getTotal($player) < getTotal($dealer)) {
-				$bankroll -= $bet;
-				$bankroll -= $insuranceBet;
-				echo 'Dealer wins! ' . PHP_EOL;
-				echoBankroll($bankroll);
-				echo '---------------------------------------------------' . PHP_EOL;
-			}
-			playAgain($name, $bankroll, $bet);
-
+			evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
 		//Hit option
 		} elseif ($decision == 'h') {
 			$newCard = drawACard($deck);
@@ -284,12 +331,7 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 			echo $name . ' total = ' . $total . PHP_EOL;
 			//notify when player busts
 			if (getTotal($player) > 21) {
-				$bankroll -= $bet;
-				$bankroll -= $insuranceBet;
-				echo $name . ' busted! Dealer wins.' . PHP_EOL;
-				echoBankroll($bankroll);
-				echo '---------------------------------------------------' . PHP_EOL;
-				playAgain($name, $bankroll, $bet);
+				evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
 			}
 		}
 	}
