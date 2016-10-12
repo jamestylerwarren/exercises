@@ -134,14 +134,16 @@ function playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankrol
 }
 
 function dealerHit ($deck, $dealer){
-	$newCard = drawACard($deck);
-	$dealer[] = $newCard;
-	$total = getTotal($dealer);
-	//echo out each card and total
-	foreach ($dealer as $card) {
-		echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+	while (getTotal($dealer) < 17) {
+		$newCard = drawACard($deck);
+		$dealer[] = $newCard;
+		$total = getTotal($dealer);
+		//echo out each card and total
+		foreach ($dealer as $card) {
+			echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
+		}
+		echo 'Dealer total = ' . $total . PHP_EOL;
 	}
-	echo 'Dealer total = ' . $total . PHP_EOL;
 	return $dealer;
 }
 
@@ -158,16 +160,7 @@ function doubleDown($name, $deck, $player, $dealer, $insuranceBet, $deck, $bet, 
 			$player = playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll);
 			//play out dealer hand
 			echoDealer($dealer, false);
-			while (getTotal($dealer) < 17) {
-				$newCard = drawACard($deck);
-				$dealer[] = $newCard;
-				$total = getTotal($dealer);
-				//echo out each card and total
-				foreach ($dealer as $card) {
-					echo '[' . $card['card'] . ' ' . $card['suit'] . '] ';
-				}
-				echo 'Dealer total = ' . $total . PHP_EOL;
-			}
+			$dealer = dealerHit ($deck, $dealer);
 			//evaluate result
 			evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
 		}
@@ -201,8 +194,6 @@ function playerInsurance($name, $dealer, $bet, $bankroll) {
 	}
 }
 
-
-
 // //allow ability to split hand
 // function splitCards($player, $name, $bankroll, $bet, $deck) {
 // 	//if two cards are same value and ($bankroll >= ($bet*2)), ask if they want to split cards
@@ -231,6 +222,23 @@ function playerInsurance($name, $dealer, $bet, $bankroll) {
 // 		}
 // 	}
 // }
+
+function hitOrStay($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll) {
+	while (getTotal($player) < 22) {
+		fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
+		$decision = strtolower(trim(fgets(STDIN)));
+		//Stay option
+		if ($decision == 's') {
+			echoDealer($dealer, false);
+			$dealer = dealerHit ($deck, $dealer);
+			//Evaluate Hands
+			evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
+		//Hit option
+		} elseif ($decision == 'h') {
+			$player = playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll);
+		}
+	}
+}
 
 
 //Evaluate Hands
@@ -287,7 +295,7 @@ function blackjackCheck($name, $player, $bankroll, $bet){
 	}
 }
 
-//sets up game - builds deck, takes player name, bankroll, initial bet and draws & echos hands
+//sets up game - builds deck, takes player name, bankroll, initial bet and draws & echos player and dealer hands
 function gameSetup() {
 	// create an array for cards
 	$suits = ['C', 'H', 'S', 'D'];
@@ -311,8 +319,10 @@ function gameSetup() {
 function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 	//check if player has blackjack and end hand
 	blackjackCheck($name, $player, $bankroll, $bet); 
+
 	//insurance bet?
 	$insuranceBet = playerInsurance($name, $dealer, $bet, $bankroll);
+
 	//split option here
 	//splitCards($player, $name, $bankroll, $bet, $deck);
 
@@ -320,24 +330,8 @@ function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
 	doubleDown($name, $deck, $player, $dealer, $insuranceBet, $deck, $bet, $bankroll);
 
 	//player must select (H)it or (S)tay
-	while (getTotal($player) < 22) {
-		fwrite(STDOUT, "(H)it or (S)tay? ") . PHP_EOL;
-		$decision = strtolower(trim(fgets(STDIN)));
-		//Stay option
-		if ($decision == 's') {
-			echoDealer($dealer, false);
-			while (getTotal($dealer) < 17) {
-				$dealer = dealerHit($deck, $dealer);
-			}
-			//Evaluate Hands
-			evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll);
-		//Hit option
-		} elseif ($decision == 'h') {
-			$player = playerHit($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll);
-		}
-	}
+	hitOrStay($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankroll);
 }
-
 function playAgain($name, $bankroll, $bet) {
 	fwrite(STDOUT, "Do you want to play again " . $name . "? (y)es or (n)o? ") . PHP_EOL;
 	$choice = strtolower(trim(fgets(STDIN)));
