@@ -240,7 +240,6 @@ function hitOrStay($name, $deck, $player, $dealer, $bet, $insuranceBet, $bankrol
 	}
 }
 
-
 //Evaluate Hands
 function evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll) {
 	//evaluate if dealer busts
