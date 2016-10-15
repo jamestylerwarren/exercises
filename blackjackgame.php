@@ -260,36 +260,29 @@ function splitCards($player, $dealer, $name, $insuranceBet, $bankroll, $bet, $de
 			echo '---------------------------------------------------' . PHP_EOL;
 			//Evaluate Hands
 			//evaluate if dealer busts, both hands win
-			if (getTotal($dealer) > 21) {
-				$bankroll += $firstSplitHandBet;
-				$bankroll += $secondSplitHandBet;
-				echo 'Dealer busted!' . PHP_EOL;
-				echoBankroll($bankroll);
-				echo '---------------------------------------------------' . PHP_EOL;
-				//stop from proceeding to next if-block by calling playAgain
-			}
+
 			//evaluate first hand
 			//evaluate first hand busts
 			echoDealer($dealer, false);
 			echoPlayer($firstSplitHand, $name);
 			if (getTotal($firstSplitHand) > 21) {
 				$bankroll -= $firstSplitHandBet;
-				echo $name . ' busted! Dealer wins.' . PHP_EOL;
-				echoBankroll($bankroll);
+				echo $name . ' busted! Dealer wins. ' . $name . ' loses $' . $firstSplitHandBet . PHP_EOL;
+				echo '---------------------------------------------------' . PHP_EOL;
+			} elseif (getTotal($dealer) > 21) {
+				$bankroll += $firstSplitHandBet;
+				echo 'Dealer busted! ' . $name . 'wins $' . $firstSplitHandBet . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($firstSplitHand) == getTotal($dealer)) {
 				echo $name . ' and Dealer push!' . PHP_EOL;
-				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($firstSplitHand) > getTotal($dealer)) {
 				$bankroll += $firstSplitHandBet;
-				echo $name . ' wins!' . PHP_EOL;
-				echoBankroll($bankroll);
+				echo $name . ' wins ' . $firstSplitHandBet . '! ' . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($firstSplitHand) < getTotal($dealer)) {
 				$bankroll -= $firstSplitHandBet;
-				echo 'Dealer wins!' . PHP_EOL;
-				echoBankroll($bankroll);
+				echo 'Dealer wins! ' . $name . ' loses $' . $firstSplitHandBet . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			}
 			//evaluate second Hand
@@ -298,24 +291,26 @@ function splitCards($player, $dealer, $name, $insuranceBet, $bankroll, $bet, $de
 			echoPlayer($secondSplitHand, $name);
 			if (getTotal($secondSplitHand) > 21) {
 				$bankroll -= $secondSplitHandBet;
-				echo $name . ' busted! Dealer wins.' . PHP_EOL;
-				echoBankroll($bankroll);
+				echo 'Dealer wins. ' . $name . ' loses $' . $secondSplitHandBet . PHP_EOL;
+				echo '---------------------------------------------------' . PHP_EOL;
+			} elseif (getTotal($dealer) > 21) {
+				$bankroll += $secondSplitHandBet;
+				echo 'Dealer busted! ' . $name . ' loses $' . $secondSplitHandBet . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($secondSplitHand) == getTotal($dealer)) {
 				echo $name . ' and Dealer push!' . PHP_EOL;
-				echoBankroll($bankroll);
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($secondSplitHand) > getTotal($dealer)) {
 				$bankroll += $secondSplitHandBet;
-				echo $name . ' wins!' . PHP_EOL;
-				echoBankroll($bankroll);
+				echo $name . ' wins $' . $secondSplitHandBet . '!' . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			} elseif (getTotal($secondSplitHand) < getTotal($dealer)) {
 				$bankroll -= $secondSplitHandBet;
-				echo 'Dealer wins!' . PHP_EOL;
-				echoBankroll($bankroll);
+				echo 'Dealer wins. ' . $name . ' loses $' . $secondSplitHandBet . PHP_EOL;
 				echo '---------------------------------------------------' . PHP_EOL;
 			}
+			echoBankroll($bankroll);
+			echo '---------------------------------------------------' . PHP_EOL;
 			playAgain($name, $bankroll);
 		}
 	}
@@ -384,11 +379,7 @@ function evaluateHands($name, $player, $dealer, $bet, $insuranceBet, $bankroll) 
 //check if player has blackjack and end hand if true
 function blackjackCheck($name, $player, $bankroll, $bet){
 	if (getTotal($player) == 21) {
-		$bankroll += ($bet * 1.50);
-		echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
-		echoBankroll($bankroll);
-		echo '---------------------------------------------------' . PHP_EOL;
-		playAgain($name, $bankroll);
+		return true;
 	}
 }
 
@@ -414,8 +405,15 @@ function gameSetup() {
 }
 
 function gamePlay($deck, $player, $dealer, $name, $bankroll, $bet) {
+	
 	//check if player has blackjack and end hand
-	blackjackCheck($name, $player, $bankroll, $bet); 
+	if (blackjackCheck($name, $player, $bankroll, $bet)) {
+		$bankroll += ($bet * 1.50);
+		echo 'Blackjack!! ' . $name . ' wins $' . ($bet * 1.50) . '!' . PHP_EOL;
+		echoBankroll($bankroll);
+		echo '---------------------------------------------------' . PHP_EOL;
+		playAgain($name, $bankroll);
+	} 
 
 	//insurance bet?
 	$insuranceBet = playerInsurance($name, $dealer, $bet, $bankroll);
