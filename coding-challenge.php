@@ -1,37 +1,32 @@
 <?php
 
-//Problem One:
-// $num = 25;
 
-// function square($num) {
-// 	$message = "false" . PHP_EOL;
-// 	for ($i=0; $i < $num; $i++) { 
-// 		if ($i * $i == $num) {
-// 			$message = "true" . PHP_EOL;
-// 		} 
-// 	}
-// 	return $message;
+//problem 1:
+
+
+//problem 2:
+
+//problem 3:
+// function triangles($x){
+// 	$answer = (pow($x,3))/((1-(pow($x,2)))*(1-(pow($x,3)))*(1-(pow($x,4))));
+// 	return $answer . PHP_EOL;
 // }
-// print square($num);
+// $x = 20;
+// print(triangles($x));
 
-
-
-
-
-//Problem 4:
-$pin = '7611';
-function pincheck($pin) {
-	$message = 'true' . PHP_EOL;
-	if (strlen($pin) < 4 || strlen($pin) > 6) {
-		$message = 'false' . PHP_EOL; 
+//problem 4:
+function coordinates($lat, $long){
+	if (!is_numeric($lat) || !is_numeric($long)) {
+		echo "FALSE" . PHP_EOL;
 	}
-	if (strcspn($pin, 'ABCDEFGHJIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') < 0) {
-		$message = 'false' . PHP_EOL;
+	if ($lat < -90 || $lat > 90 || $long < -180 || $long > 180) {
+		echo "FALSE" . PHP_EOL;
 	}
-	return $message;
+	echo "TRUE" . PHP_EOL;
 }
-print pincheck($pin);
+print_r(coordinates( - 2, 1));
 
+//problem 5:
 
 
 
