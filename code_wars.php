@@ -1,4 +1,5 @@
 <?php
+//CODE WARS PROBLEMS;
 
 // getting median of array;
 // function median($a) {
@@ -19,11 +20,17 @@
 
 
 function compose($s1, $s2) {
+    //explode strings into arrays
     $s1 = explode("\n", $s1);
     $s2 = explode("\n", $s2);
+    
+    var_dump($s1);
+
+
+
+    //last step is imploding all array keys into a string;
 }
 
 $s1 = "byGt\nhTts\nRTFF\nCnnI";
 $s2 = "jIRl\nViBu\nrWOb\nNkTB";
-
 compose($s1, $s2);
